@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %}Recruiter Dashboard – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Recruiter Dashboard</h2>
+            <p class="text-muted small mb-0">
+                {{ company.name }} • 
+                {% if company.is_verified %}
+                    <span class="badge bg-success"><i class="bi bi-patch-check-fill me-1"></i>Verified Partner</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark"><i class="bi bi-clock-history me-1"></i>Verification Pending</span>
+                {% endif %}
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'opportunities:create' %}" class="btn btn-primary-custom btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> Post Opportunity
+            </a>
+            <a href="{% url 'recruiters:company_profile' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-building me-1"></i> Company Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-primary border-4">
+                <h3 class="fw-bold mb-0 text-primary">{{ stats.active_opps }}</h3>
+                <div class="text-muted small">Active Postings</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'recruiters:applicants' %}" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-info border-4">
+                    <h3 class="fw-bold mb-0 text-info">{{ stats.total_apps }}</h3>
+                    <div class="text-muted small">Total Applicants</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'recruiters:applicants' %}?status=UNDER_REVIEW" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-secondary border-4">
+                    <h3 class="fw-bold mb-0 text-secondary">{{ stats.under_review }}</h3>
+                    <div class="text-muted small">Under Review</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'recruiters:applicants' %}?status=SHORTLISTED" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-warning border-4">
+                    <h3 class="fw-bold mb-0 text-warning">{{ stats.shortlisted }}</h3>
+                    <div class="text-muted small">Shortlisted</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'interviews:interview_list' %}" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-purple border-4" style="border-left-color: #8b5cf6 !important;">
+                    <h3 class="fw-bold mb-0" style="color: #8b5cf6;">{{ stats.interviews }}</h3>
+                    <div class="text-muted small">Interviews</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'recruiters:applicants' %}?status=SELECTED" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-success border-4">
+                    <h3 class="fw-bold mb-0 text-success">{{ stats.selected }}</h3>
+                    <div class="text-muted small">Hired Candidates</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Funnel Chart & Recent Postings -->
+    <div class="row g-4 mb-4">
+        <!-- Applicant Pipeline Funnel -->
+        <div class="col-lg-7">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-funnel text-primary me-2"></i>Hiring Pipeline Funnel</h5>
+                <div style="height: 250px;">
+                    <canvas id="recruiterFunnelChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Active Postings -->
+        <div class="col-lg-5">
+            <div class="custom-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark mb-0">Active Postings</h5>
+                    <a href="{% url 'opportunities:my_opportunities' %}" class="small text-decoration-none">Manage All</a>
+                </div>
+                {% if my_opportunities %}
+                    <div class="list-group list-group-flush">
+                        {% for opp in my_opportunities %}
+                            <div class="list-group-item px-0 py-2 border-bottom">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="overflow-hidden">
+                                        <a href="{% url 'opportunities:detail' opp.id %}" class="fw-semibold small text-decoration-none text-dark d-block text-truncate">
+                                            {{ opp.title }}
+                                        </a>
+                                        <span class="badge {% if opp.status == 'APPROVED' %}bg-success{% elif opp.status == 'PENDING' %}bg-warning text-dark{% else %}bg-secondary{% endif %}" style="font-size: 0.65rem;">
+                                            {{ opp.get_status_display }}
+                                        </span>
+                                    </div>
+                                    <a href="{% url 'recruiters:applicants' %}?opportunity={{ opp.id }}" class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size: 0.75rem;">
+                                        {{ opp.applications.count }} Applicants
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small text-center py-4">No postings yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Applications Table -->
+    <div class="custom-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Recent Candidate Applications</h5>
+            <a href="{% url 'recruiters:applicants' %}" class="btn btn-outline-primary btn-sm">View All Candidates</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>College & Dept</th>
+                        <th>CGPA</th>
+                        <th>Applied Role</th>
+                        <th>Status</th>
+                        <th>Applied Date</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in recent_applications %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold">{{ app.student.get_full_name }}</div>
+                                <div class="text-muted small">{{ app.student.email }}</div>
+                            </td>
+                            <td class="small">
+                                <div>{{ app.student.student_profile.college }}</div>
+                                <div class="text-muted">{{ app.student.student_profile.department }}</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border fw-bold">{{ app.student.student_profile.cgpa }}</span>
+                            </td>
+                            <td class="small">
+                                <a href="{% url 'opportunities:detail' app.opportunity.id %}" class="text-dark text-decoration-none fw-semibold">
+                                    {{ app.opportunity.title }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ app.badge_color }}">{{ app.get_status_display }}</span>
+                            </td>
+                            <td class="small text-muted">{{ app.applied_at|date:"M d, Y" }}</td>
+                            <td class="text-end">
+                                <a href="{% url 'recruiters:applicant_detail' app.id %}" class="btn btn-sm btn-outline-primary">
+                                    Review
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                No applications received yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const labels = {{ funnel_data.labels|safe }};
+        const data = {{ funnel_data.data|safe }};
+        renderFunnelChart('recruiterFunnelChart', labels, data);
+    });
+</script>
+{% endblock %}

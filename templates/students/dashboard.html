@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Welcome Header & Profile Completion -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-7">
+            <h2 class="fw-bold mb-1">Hello, {{ user.first_name|default:user.username }}! 👋</h2>
+            <p class="text-muted mb-0">{{ profile.degree }} in {{ profile.department }} • {{ profile.college }}</p>
+        </div>
+        <div class="col-md-5 mt-3 mt-md-0">
+            <div class="custom-card p-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-semibold small">Profile Completion</span>
+                    <span class="badge {% if completion_percentage >= 80 %}bg-success{% elif completion_percentage >= 50 %}bg-primary{% else %}bg-warning text-dark{% endif %}">
+                        {{ completion_percentage }}%
+                    </span>
+                </div>
+                <div class="progress mb-2" style="height: 8px;">
+                    <div class="progress-bar {% if completion_percentage >= 80 %}bg-success{% elif completion_percentage >= 50 %}bg-primary{% else %}bg-warning{% endif %}" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                {% if completion_percentage < 100 %}
+                    <div class="text-end">
+                        <a href="{% url 'students:edit_profile' %}" class="small text-decoration-none text-primary fw-semibold">
+                            <i class="bi bi-pencil-square me-1"></i> Complete Profile for Better Matches
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Status Counters -->
+    <div class="row g-3 mb-5">
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'applications:my_applications' %}" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-primary border-4">
+                    <h3 class="fw-bold mb-0 text-primary">{{ total_apps }}</h3>
+                    <div class="text-muted small">Submitted</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'applications:my_applications' %}?status=UNDER_REVIEW" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-info border-4">
+                    <h3 class="fw-bold mb-0 text-info">{{ under_review }}</h3>
+                    <div class="text-muted small">Under Review</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'applications:my_applications' %}?status=SHORTLISTED" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-warning border-4">
+                    <h3 class="fw-bold mb-0 text-warning">{{ shortlisted }}</h3>
+                    <div class="text-muted small">Shortlisted</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'interviews:interview_list' %}" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-secondary border-4" style="border-left-color: #8b5cf6 !important;">
+                    <h3 class="fw-bold mb-0" style="color: #8b5cf6;">{{ interviews_count }}</h3>
+                    <div class="text-muted small">Interviews</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'applications:my_applications' %}?status=SELECTED" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-success border-4">
+                    <h3 class="fw-bold mb-0 text-success">{{ selected }}</h3>
+                    <div class="text-muted small">Selected 🎉</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <a href="{% url 'applications:my_applications' %}?status=REJECTED" class="text-decoration-none">
+                <div class="custom-card p-3 text-center h-100 border-start border-danger border-4">
+                    <h3 class="fw-bold mb-0 text-danger">{{ rejected }}</h3>
+                    <div class="text-muted small">Archived</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Column: Recommendations -->
+        <div class="col-lg-8">
+            <!-- Recommended Internships -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-stars text-warning me-2"></i>Recommended Internships
+                </h5>
+                <a href="{% url 'opportunities:list' %}?opportunity_type=INTERNSHIP" class="small text-decoration-none">Browse All</a>
+            </div>
+
+            <div class="row g-3 mb-4">
+                {% for opp, breakdown in rec_internships %}
+                    <div class="col-md-6">
+                        <div class="custom-card p-3 h-100 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge match-badge {% if breakdown.score >= 80 %}match-high{% elif breakdown.score >= 50 %}match-mid{% else %}match-low{% endif %}">
+                                    <i class="bi bi-bullseye"></i> {{ breakdown.score }}% Match
+                                </span>
+                                <span class="badge bg-light text-dark border">{{ opp.get_work_mode_display }}</span>
+                            </div>
+
+                            <h6 class="fw-bold mb-1">
+                                <a href="{% url 'opportunities:detail' opp.id %}" class="text-dark text-decoration-none">
+                                    {{ opp.title }}
+                                </a>
+                            </h6>
+                            <div class="text-muted small mb-2">{{ opp.company.name }} • {{ opp.location }}</div>
+
+                            <div class="small text-muted mb-2">
+                                {% if opp.stipend %}<span class="text-success fw-semibold"><i class="bi bi-cash me-1"></i>{{ opp.stipend }}</span> • {% endif %}
+                                <span>Deadline: {{ opp.application_deadline|date:"M d" }}</span>
+                            </div>
+
+                            <!-- Match reasons snippet -->
+                            <div class="bg-light p-2 rounded-2 mb-3 mt-auto" style="font-size: 0.75rem;">
+                                {% for r in breakdown.reasons|slice:":2" %}
+                                    <div class="text-muted"><i class="bi bi-check2 text-success me-1"></i>{{ r }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'opportunities:detail' opp.id %}" class="btn btn-sm btn-outline-primary w-100">
+                                    View & Apply
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-4 custom-card text-muted">
+                        <p class="mb-0">No internship recommendations currently match your profile. Check the main catalog!</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Recommended Full-time Placements -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-briefcase-fill text-primary me-2"></i>Recommended Placements
+                </h5>
+                <a href="{% url 'opportunities:list' %}?opportunity_type=PLACEMENT" class="small text-decoration-none">Browse All</a>
+            </div>
+
+            <div class="row g-3">
+                {% for opp, breakdown in rec_placements %}
+                    <div class="col-md-6">
+                        <div class="custom-card p-3 h-100 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge match-badge {% if breakdown.score >= 80 %}match-high{% elif breakdown.score >= 50 %}match-mid{% else %}match-low{% endif %}">
+                                    <i class="bi bi-bullseye"></i> {{ breakdown.score }}% Match
+                                </span>
+                                <span class="badge bg-light text-dark border">{{ opp.get_work_mode_display }}</span>
+                            </div>
+
+                            <h6 class="fw-bold mb-1">
+                                <a href="{% url 'opportunities:detail' opp.id %}" class="text-dark text-decoration-none">
+                                    {{ opp.title }}
+                                </a>
+                            </h6>
+                            <div class="text-muted small mb-2">{{ opp.company.name }} • {{ opp.location }}</div>
+
+                            <div class="small text-muted mb-2">
+                                {% if opp.salary %}<span class="text-success fw-semibold"><i class="bi bi-wallet2 me-1"></i>{{ opp.salary }}</span> • {% endif %}
+                                <span>Deadline: {{ opp.application_deadline|date:"M d" }}</span>
+                            </div>
+
+                            <div class="bg-light p-2 rounded-2 mb-3 mt-auto" style="font-size: 0.75rem;">
+                                {% for r in breakdown.reasons|slice:":2" %}
+                                    <div class="text-muted"><i class="bi bi-check2 text-success me-1"></i>{{ r }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <a href="{% url 'opportunities:detail' opp.id %}" class="btn btn-sm btn-outline-primary w-100">
+                                View & Apply
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-4 custom-card text-muted">
+                        <p class="mb-0">No placement recommendations found. Add more skills to increase matches!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sidebar: Interviews & Saved -->
+        <div class="col-lg-4">
+            <!-- Upcoming Interviews Card -->
+            <div class="custom-card p-3 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-calendar-check-fill text-primary me-2"></i>Upcoming Interviews</h6>
+                    <a href="{% url 'interviews:interview_list' %}" class="small text-decoration-none">All</a>
+                </div>
+                {% if upcoming_interviews %}
+                    <div class="list-group list-group-flush">
+                        {% for interview in upcoming_interviews %}
+                            <div class="list-group-item px-0 py-2 border-bottom">
+                                <div class="fw-bold small">{{ interview.application.opportunity.title }}</div>
+                                <div class="text-muted small">{{ interview.application.opportunity.company.name }}</div>
+                                <div class="d-flex justify-content-between align-items-center mt-1 small">
+                                    <span class="text-primary"><i class="bi bi-clock me-1"></i>{{ interview.interview_date }} at {{ interview.interview_time|time:"g:i A" }}</span>
+                                    {% if interview.meeting_link %}
+                                        <a href="{{ interview.meeting_link }}" target="_blank" class="btn btn-sm btn-outline-success py-0 px-2" style="font-size: 0.75rem;">Join</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0 text-center py-3">No upcoming interviews scheduled yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Saved Opportunities Card -->
+            <div class="custom-card p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-bookmark-fill text-warning me-2"></i>Saved Opportunities</h6>
+                    <a href="{% url 'students:saved_opportunities' %}" class="small text-decoration-none">View ({{ saved_ids|length }})</a>
+                </div>
+                {% if saved_opps %}
+                    <div class="list-group list-group-flush">
+                        {% for s_opp in saved_opps %}
+                            <div class="list-group-item px-0 py-2 border-bottom">
+                                <a href="{% url 'opportunities:detail' s_opp.id %}" class="text-decoration-none text-dark fw-semibold small d-block text-truncate">
+                                    {{ s_opp.title }}
+                                </a>
+                                <div class="d-flex justify-content-between align-items-center text-muted small mt-1">
+                                    <span>{{ s_opp.company.name }}</span>
+                                    <a href="{% url 'opportunities:detail' s_opp.id %}" class="text-primary text-decoration-none">Apply</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0 text-center py-3">You haven't bookmarked any opportunities yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Student Profile – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Edit Student Profile</h3>
+            <p class="text-muted small mb-0">Update your academic information, resume, and project portfolio.</p>
+        </div>
+        <a href="{% url 'students:profile' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Profile
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Navigation Pills -->
+        <div class="col-md-3">
+            <div class="custom-card p-3">
+                <div class="nav flex-column nav-pills" id="profile-tabs" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active text-start mb-2" id="tab-general-btn" data-bs-toggle="pill" data-bs-target="#tab-general" type="button" role="tab">
+                        <i class="bi bi-person-lines-fill me-2"></i> General & Academic
+                    </button>
+                    <button class="nav-link text-start mb-2" id="tab-resume-btn" data-bs-toggle="pill" data-bs-target="#tab-resume" type="button" role="tab">
+                        <i class="bi bi-file-earmark-pdf me-2"></i> Resume (PDF)
+                    </button>
+                    <button class="nav-link text-start mb-2" id="tab-projects-btn" data-bs-toggle="pill" data-bs-target="#tab-projects" type="button" role="tab">
+                        <i class="bi bi-code-slash me-2"></i> Projects
+                    </button>
+                    <button class="nav-link text-start mb-2" id="tab-certifications-btn" data-bs-toggle="pill" data-bs-target="#tab-certifications" type="button" role="tab">
+                        <i class="bi bi-award me-2"></i> Certifications
+                    </button>
+                    <button class="nav-link text-start" id="tab-experience-btn" data-bs-toggle="pill" data-bs-target="#tab-experience" type="button" role="tab">
+                        <i class="bi bi-briefcase me-2"></i> Experience
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="col-md-9">
+            <div class="tab-content" id="profile-tabs-content">
+                
+                <!-- 1. General & Academic -->
+                <div class="tab-pane fade show active" id="tab-general" role="tabpanel">
+                    <div class="custom-card p-4">
+                        <h5 class="fw-bold text-primary mb-3">General & Academic Details</h5>
+                        <form method="POST" action="{% url 'students:edit_profile' %}">
+                            {% csrf_token %}
+
+                            <h6 class="fw-bold small text-muted text-uppercase mb-2">Basic Info</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">First Name</label>
+                                    {{ user_form.first_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Last Name</label>
+                                    {{ user_form.last_name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Phone Number</label>
+                                    {{ user_form.phone }}
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Short Bio / Summary</label>
+                                    {{ profile_form.bio }}
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold small text-muted text-uppercase mb-2">Education & College</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">College / University Name</label>
+                                    {{ profile_form.college }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">Degree</label>
+                                    {{ profile_form.degree }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">Department / Branch</label>
+                                    {{ profile_form.department }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">Graduation Year</label>
+                                    {{ profile_form.graduation_year }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-semibold">CGPA</label>
+                                    {{ profile_form.cgpa }}
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold small text-muted text-uppercase mb-2">Skills & Preferences</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Technical Skills (Comma separated)</label>
+                                    {{ profile_form.skills }}
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Soft Skills</label>
+                                    {{ profile_form.soft_skills }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Preferred Roles</label>
+                                    {{ profile_form.preferred_role }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Preferred Locations</label>
+                                    {{ profile_form.preferred_location }}
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold small text-muted text-uppercase mb-2">Social & Portfolio Links</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">GitHub URL</label>
+                                    {{ profile_form.github_url }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">LinkedIn URL</label>
+                                    {{ profile_form.linkedin_url }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">Portfolio URL</label>
+                                    {{ profile_form.portfolio_url }}
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary-custom px-4">
+                                Save Profile Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 2. Resume PDF -->
+                <div class="tab-pane fade" id="tab-resume" role="tabpanel">
+                    <div class="custom-card p-4">
+                        <h5 class="fw-bold text-primary mb-3">Upload / Replace Resume</h5>
+                        <p class="text-muted small mb-4">
+                            Upload your latest resume in <strong>PDF format (.pdf)</strong>. Our system parses the file using <code>pypdf</code> to index keywords for accurate recommendations.
+                        </p>
+
+                        {% if profile.resume %}
+                            <div class="alert alert-success d-flex align-items-center mb-4">
+                                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                                <div>
+                                    <div class="fw-bold">Current Active Resume:</div>
+                                    <a href="{{ profile.resume.url }}" target="_blank" class="small text-decoration-none fw-semibold">
+                                        <i class="bi bi-file-earmark-pdf me-1"></i>{{ profile.resume.name }}
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <form method="POST" action="{% url 'students:upload_resume' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Select PDF File (Max 5MB)</label>
+                                {{ resume_form.resume }}
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-sm px-4">
+                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload & Extract Resume
+                            </button>
+                        </form>
+
+                        {% if profile.resume_extracted_text %}
+                            <div class="mt-4 pt-3 border-top">
+                                <h6 class="fw-bold small text-muted text-uppercase mb-2">Resume Extracted Keywords Preview</h6>
+                                <div class="bg-light p-3 rounded-3 small text-muted border font-monospace" style="max-height: 150px; overflow-y: auto; font-size: 0.8rem;">
+                                    {{ profile.resume_extracted_text|truncatewords:80 }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 3. Projects -->
+                <div class="tab-pane fade" id="tab-projects" role="tabpanel">
+                    <div class="custom-card p-4 mb-4">
+                        <h5 class="fw-bold text-primary mb-3">Add New Project</h5>
+                        <form method="POST" action="{% url 'students:add_project' %}">
+                            {% csrf_token %}
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Project Title *</label>
+                                    {{ project_form.title }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Technologies Used *</label>
+                                    {{ project_form.technologies }}
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Project Link / Repo</label>
+                                    {{ project_form.project_url }}
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Description *</label>
+                                    {{ project_form.description }}
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom btn-sm">Add Project</button>
+                        </form>
+                    </div>
+
+                    <div class="custom-card p-4">
+                        <h6 class="fw-bold mb-3">Existing Projects ({{ profile.projects.count }})</h6>
+                        {% for p in profile.projects.all %}
+                            <div class="p-3 bg-light rounded-3 mb-3 border d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">{{ p.title }}</h6>
+                                    <p class="text-muted small mb-1">{{ p.description }}</p>
+                                    <span class="badge bg-secondary">{{ p.technologies }}</span>
+                                </div>
+                                <a href="{% url 'students:delete_project' p.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Remove project?');">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No projects added yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- 4. Certifications -->
+                <div class="tab-pane fade" id="tab-certifications" role="tabpanel">
+                    <div class="custom-card p-4 mb-4">
+                        <h5 class="fw-bold text-primary mb-3">Add Certification</h5>
+                        <form method="POST" action="{% url 'students:add_certification' %}">
+                            {% csrf_token %}
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Certificate Name *</label>
+                                    {{ cert_form.name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Issuing Organization *</label>
+                                    {{ cert_form.issuing_organization }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Issue Date</label>
+                                    {{ cert_form.issue_date }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Credential Verification URL</label>
+                                    {{ cert_form.credential_url }}
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom btn-sm">Add Certification</button>
+                        </form>
+                    </div>
+
+                    <div class="custom-card p-4">
+                        <h6 class="fw-bold mb-3">Your Certifications</h6>
+                        {% for c in profile.certifications.all %}
+                            <div class="p-3 bg-light rounded-3 mb-3 border d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">{{ c.name }}</h6>
+                                    <div class="text-muted small">{{ c.issuing_organization }} • {{ c.issue_date }}</div>
+                                </div>
+                                <a href="{% url 'students:delete_certification' c.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Remove certification?');">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No certifications added yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- 5. Experience -->
+                <div class="tab-pane fade" id="tab-experience" role="tabpanel">
+                    <div class="custom-card p-4 mb-4">
+                        <h5 class="fw-bold text-primary mb-3">Add Work / Internship Experience</h5>
+                        <form method="POST" action="{% url 'students:add_experience' %}">
+                            {% csrf_token %}
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Company Name *</label>
+                                    {{ exp_form.company }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold">Role / Position *</label>
+                                    {{ exp_form.role }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">Start Date</label>
+                                    {{ exp_form.start_date }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-semibold">End Date</label>
+                                    {{ exp_form.end_date }}
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center pt-4">
+                                    <div class="form-check">
+                                        {{ exp_form.is_current }}
+                                        <label class="form-check-label small fw-semibold" for="{{ exp_form.is_current.id_for_label }}">Currently working here</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-semibold">Description</label>
+                                    {{ exp_form.description }}
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom btn-sm">Add Experience</button>
+                        </form>
+                    </div>
+
+                    <div class="custom-card p-4">
+                        <h6 class="fw-bold mb-3">Your Experience</h6>
+                        {% for e in profile.experiences.all %}
+                            <div class="p-3 bg-light rounded-3 mb-3 border d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">{{ e.role }} at {{ e.company }}</h6>
+                                    <div class="text-muted small mb-1">{{ e.start_date }} – {% if e.is_current %}Present{% else %}{{ e.end_date }}{% endif %}</div>
+                                    <p class="text-muted small mb-0">{{ e.description }}</p>
+                                </div>
+                                <a href="{% url 'students:delete_experience' e.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Remove experience?');">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No experience added yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

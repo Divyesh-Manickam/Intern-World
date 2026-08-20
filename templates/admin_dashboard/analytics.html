@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Platform Analytics & Insights – Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-graph-up text-primary me-2"></i>Platform Analytics & Trends</h2>
+            <p class="text-muted small mb-0">Aggregate placement metrics, hiring velocity, skill distribution, and engagement charts.</p>
+        </div>
+        <a href="{% url 'analytics:admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <!-- Analytics Charts Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Monthly Activity Chart -->
+        <div class="col-lg-6">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3">Applications Submitted (Monthly)</h5>
+                <div style="height: 280px;">
+                    <canvas id="monthlyAppsAnalyticsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Funnel Conversion Chart -->
+        <div class="col-lg-6">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3">Application Pipeline & Conversion</h5>
+                <div style="height: 280px;">
+                    <canvas id="funnelAnalyticsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- In-Demand Skills Doughnut -->
+        <div class="col-lg-6">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3">Most Demanded Skills</h5>
+                <div style="height: 280px;">
+                    <canvas id="skillsAnalyticsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Hiring Companies Table -->
+        <div class="col-lg-6">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3">Most Active Hiring Partners</h5>
+                <div class="table-responsive">
+                    <table class="table table-custom table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th class="text-end">Postings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comp in top_companies.items %}
+                                <tr>
+                                    <td class="fw-bold text-dark">{{ comp.name }}</td>
+                                    <td class="text-end"><span class="badge bg-primary">{{ comp.count }} Openings</span></td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center py-4 text-muted">No data available.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMonthlyApplicationsChart('monthlyAppsAnalyticsChart', {{ monthly_apps.labels|safe }}, {{ monthly_apps.data|safe }});
+        renderFunnelChart('funnelAnalyticsChart', {{ funnel_data.labels|safe }}, {{ funnel_data.data|safe }});
+        renderPopularSkillsChart('skillsAnalyticsChart', {{ popular_skills.labels|safe }}, {{ popular_skills.data|safe }});
+    });
+</script>
+{% endblock %}

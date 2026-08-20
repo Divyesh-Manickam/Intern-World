@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}InternWorld – Find Internships & Placement Opportunities{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center position-relative mb-5">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <span class="badge bg-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">
+                    <i class="bi bi-rocket-takeoff-fill me-1"></i> Launch Your Dream Career Today
+                </span>
+                <h1 class="display-4 fw-bold mb-3">Find Your Next Opportunity</h1>
+                <p class="hero-subtitle mb-4">
+                    Connect students with top-tier internships and high-growth career opportunities across verified companies.
+                </p>
+
+                <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+                    <a href="{% url 'opportunities:list' %}" class="btn btn-accent btn-lg px-4 py-2 shadow-sm">
+                        <i class="bi bi-search me-2"></i> Find Internships
+                    </a>
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'accounts:register_recruiter' %}" class="btn btn-outline-light btn-lg px-4 py-2">
+                            <i class="bi bi-building-add me-2"></i> Hire Talent
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Hero Search Bar -->
+                <div class="card p-2 p-md-3 shadow-lg border-0 rounded-4 bg-white text-start text-dark mx-auto" style="max-width: 800px;">
+                    <form action="{% url 'opportunities:list' %}" method="GET" class="row g-2 align-items-center">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" name="search" class="form-control border-0 shadow-none" placeholder="Job title, skills, company...">
+                            </div>
+                        </div>
+                        <div class="col-md-3 border-start-md">
+                            <select name="opportunity_type" class="form-select border-0 shadow-none">
+                                <option value="">All Types</option>
+                                <option value="INTERNSHIP">Internship</option>
+                                <option value="PLACEMENT">Full-Time Placement</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary-custom w-100 py-2">
+                                Search Opportunities
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Platform Statistics Banner -->
+<section class="container mb-5">
+    <div class="row g-3 text-center">
+        <div class="col-md-3 col-6">
+            <div class="custom-card p-4">
+                <i class="bi bi-mortarboard-fill fs-2 text-primary mb-2 d-block"></i>
+                <h3 class="fw-bold mb-1">{{ stats.total_students }}+</h3>
+                <p class="text-muted small mb-0">Active Students</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="custom-card p-4">
+                <i class="bi bi-buildings-fill fs-2 text-info mb-2 d-block"></i>
+                <h3 class="fw-bold mb-1">{{ stats.total_companies }}+</h3>
+                <p class="text-muted small mb-0">Partner Companies</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="custom-card p-4">
+                <i class="bi bi-briefcase-fill fs-2 text-warning mb-2 d-block"></i>
+                <h3 class="fw-bold mb-1">{{ stats.total_jobs }}+</h3>
+                <p class="text-muted small mb-0">Live Opportunities</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="custom-card p-4">
+                <i class="bi bi-trophy-fill fs-2 text-success mb-2 d-block"></i>
+                <h3 class="fw-bold mb-1">{{ stats.total_selections }}+</h3>
+                <p class="text-muted small mb-0">Placed Candidates</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="container mb-5">
+    <div class="text-center mb-5">
+        <h6 class="text-primary text-uppercase fw-bold letter-spacing-1">Simple Workflow</h6>
+        <h2 class="fw-bold">How InternWorld Works</h2>
+        <p class="text-muted">A streamlined pipeline from registration to interview scheduling.</p>
+    </div>
+
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="custom-card p-4 h-100">
+                <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="bi bi-person-bounding-box fs-3"></i>
+                </div>
+                <h5 class="fw-bold">1. Build Your Profile</h5>
+                <p class="text-muted small mb-0">
+                    Upload your PDF resume, fill in education details, projects, certifications, and technical skills.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="custom-card p-4 h-100">
+                <div class="bg-primary-subtle text-info rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="bi bi-cpu fs-3"></i>
+                </div>
+                <h5 class="fw-bold">2. Smart Matching Engine</h5>
+                <p class="text-muted small mb-0">
+                    Our recommendation algorithm analyzes your skill sets, CGPA, department, and preferences to rank opportunities.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="custom-card p-4 h-100">
+                <div class="bg-primary-subtle text-success rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="bi bi-calendar2-check fs-3"></i>
+                </div>
+                <h5 class="fw-bold">3. Apply & Get Hired</h5>
+                <p class="text-muted small mb-0">
+                    Submit 1-click applications, receive status alerts, attend scheduled interviews, and get hired!
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Opportunities -->
+<section class="container mb-5">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <h6 class="text-primary text-uppercase fw-bold">Trending Roles</h6>
+            <h2 class="fw-bold mb-0">Popular Opportunities</h2>
+        </div>
+        <a href="{% url 'opportunities:list' %}" class="btn btn-outline-primary btn-sm">
+            View All Openings <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    <div class="row g-4">
+        {% for opp in popular_opportunities %}
+            <div class="col-lg-4 col-md-6">
+                <div class="custom-card custom-card-hover p-4 h-100 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex align-items-center">
+                            {% if opp.company.logo %}
+                                <img src="{{ opp.company.logo.url }}" alt="{{ opp.company.name }}" class="rounded-3 me-3" style="width: 48px; height: 48px; object-fit: contain;">
+                            {% else %}
+                                <div class="bg-light text-primary rounded-3 d-flex align-items-center justify-content-center me-3 border" style="width: 48px; height: 48px; font-weight: 700;">
+                                    {{ opp.company.name|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ opp.company.name }}</h6>
+                                <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ opp.location }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if user.is_authenticated and user.is_student %}
+                            <button class="btn btn-link text-muted p-0 btn-save-toggle" data-opp-id="{{ opp.id }}">
+                                {% if opp.id in saved_ids %}
+                                    <i class="bi bi-bookmark-fill text-primary fs-5"></i>
+                                {% else %}
+                                    <i class="bi bi-bookmark fs-5"></i>
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <h5 class="fw-bold mb-2">
+                        <a href="{% url 'opportunities:detail' opp.id %}" class="text-decoration-none text-dark">
+                            {{ opp.title }}
+                        </a>
+                    </h5>
+
+                    <div class="mb-3">
+                        {% if opp.opportunity_type == 'INTERNSHIP' %}
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle me-1">Internship</span>
+                        {% else %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle me-1">Placement</span>
+                        {% endif %}
+                        <span class="badge bg-light text-dark border me-1">{{ opp.get_work_mode_display }}</span>
+                    </div>
+
+                    <div class="text-muted small mb-3">
+                        {% if opp.opportunity_type == 'INTERNSHIP' and opp.stipend %}
+                            <div><i class="bi bi-cash-stack me-1 text-success"></i><strong>{{ opp.stipend }}</strong></div>
+                        {% elif opp.salary %}
+                            <div><i class="bi bi-wallet2 me-1 text-success"></i><strong>{{ opp.salary }}</strong></div>
+                        {% endif %}
+                        <div><i class="bi bi-calendar-event me-1"></i>Deadline: {{ opp.application_deadline|date:"M d, Y" }}</div>
+                    </div>
+
+                    <div class="mb-3 mt-auto">
+                        {% for skill in opp.skills_list|slice:":3" %}
+                            <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="pt-2 border-top">
+                        <a href="{% url 'opportunities:detail' opp.id %}" class="btn btn-outline-primary btn-sm w-100">
+                            View Details & Apply
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-4 text-muted">
+                <p>No active opportunities available right now. Check back soon!</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Top Hiring Companies -->
+<section class="container mb-5">
+    <div class="text-center mb-5">
+        <h6 class="text-primary text-uppercase fw-bold">Our Partners</h6>
+        <h2 class="fw-bold">Top Verified Companies Hiring</h2>
+    </div>
+
+    <div class="row g-4">
+        {% for company in top_companies %}
+            <div class="col-md-4 col-sm-6">
+                <div class="custom-card p-4 text-center h-100">
+                    {% if company.logo %}
+                        <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="mb-3" style="max-height: 50px; max-width: 120px; object-fit: contain;">
+                    {% else %}
+                        <div class="bg-light text-primary rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3 border" style="width: 60px; height: 60px; font-weight: bold; font-size: 1.2rem;">
+                            {{ company.name|slice:":2"|upper }}
+                        </div>
+                    {% endif %}
+                    <h5 class="fw-bold mb-1">{{ company.name }}</h5>
+                    <p class="text-muted small mb-2">{{ company.industry }} • {{ company.location }}</p>
+                    <span class="badge bg-info-subtle text-info border border-info-subtle">
+                        {{ company.job_count }} Open Positions
+                    </span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="container mb-5">
+    <div class="text-center mb-5">
+        <h6 class="text-primary text-uppercase fw-bold">Testimonials</h6>
+        <h2 class="fw-bold">What Our Students & Recruiters Say</h2>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="custom-card p-4 h-100">
+                <div class="text-warning mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <p class="small text-muted mb-3">
+                    "InternWorld's recommendation algorithm matched me with a Software Engineer internship that perfectly aligned with my Python and Django skills. Landed the role in 2 weeks!"
+                </p>
+                <div class="fw-bold small">Aarav Sharma</div>
+                <div class="text-muted small">Computer Science Student, NIT</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="custom-card p-4 h-100">
+                <div class="text-warning mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <p class="small text-muted mb-3">
+                    "Managing hundreds of student applicants across multiple universities became effortless. The applicant filtering and automated interview scheduling saved our HR team dozens of hours."
+                </p>
+                <div class="fw-bold small">Priya Mehta</div>
+                <div class="text-muted small">Lead Tech Recruiter, TechCorp</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="custom-card p-4 h-100">
+                <div class="text-warning mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <p class="small text-muted mb-3">
+                    "The admin analytics and instant verification pipeline give our university placement cell real-time visibility into hiring metrics and department conversion rates."
+                </p>
+                <div class="fw-bold small">Dr. Rajesh Kumar</div>
+                <div class="text-muted small">Head of Placement Cell</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

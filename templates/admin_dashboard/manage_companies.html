@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Partner Companies – Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Company Management</h2>
+            <p class="text-muted small mb-0">Review company verification requests and manage recruiter partner accounts.</p>
+        </div>
+        <a href="{% url 'analytics:admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="custom-card p-3 p-md-4 mb-4">
+        <form method="GET" action="{% url 'analytics:admin_companies' %}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Verification Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    {% for code, label in verification_choices %}
+                        <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small fw-semibold">Search Company Name / Location / Industry</label>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search company..." value="{{ search|default:'' }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-custom btn-sm w-100 py-1">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Companies Table -->
+    <div class="custom-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Company</th>
+                        <th>Industry</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Website</th>
+                        <th>Registered</th>
+                        <th class="text-end pe-4">Verification Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in companies %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">{{ c.name }}</div>
+                                <div class="text-muted small">{{ c.opportunities.count }} Postings • {{ c.recruiters.count }} Recruiters</div>
+                            </td>
+                            <td class="small">{{ c.industry }}</td>
+                            <td class="small">{{ c.location }}</td>
+                            <td>
+                                {% if c.verification_status == 'VERIFIED' %}
+                                    <span class="badge bg-success">Verified</span>
+                                {% elif c.verification_status == 'PENDING' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td class="small">
+                                {% if c.website %}
+                                    <a href="{{ c.website }}" target="_blank" class="text-primary text-decoration-none">
+                                        <i class="bi bi-box-arrow-up-right"></i> Link
+                                    </a>
+                                {% else %}—{% endif %}
+                            </td>
+                            <td class="small text-muted">{{ c.created_at|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4">
+                                {% if c.verification_status != 'VERIFIED' %}
+                                    <a href="{% url 'analytics:verify_company' c.id %}" class="btn btn-sm btn-success me-1">
+                                        <i class="bi bi-check-lg"></i> Verify
+                                    </a>
+                                {% endif %}
+                                {% if c.verification_status != 'REJECTED' %}
+                                    <a href="{% url 'analytics:reject_company' c.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x-lg"></i> Reject
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                No companies found matching the criteria.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

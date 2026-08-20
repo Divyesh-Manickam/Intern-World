@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Platform Users – Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">User Account Management</h2>
+            <p class="text-muted small mb-0">View registered students and recruiters, control activation states, and inspect accounts.</p>
+        </div>
+        <a href="{% url 'analytics:admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="custom-card p-3 p-md-4 mb-4">
+        <form method="GET" action="{% url 'analytics:admin_users' %}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Role Filter</label>
+                <select name="role" class="form-select form-select-sm">
+                    <option value="">All Roles</option>
+                    <option value="STUDENT" {% if selected_role == 'STUDENT' %}selected{% endif %}>Students Only</option>
+                    <option value="RECRUITER" {% if selected_role == 'RECRUITER' %}selected{% endif %}>Recruiters Only</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small fw-semibold">Search by Name / Email / Phone</label>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search user account..." value="{{ search|default:'' }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-custom btn-sm w-100 py-1">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="custom-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">User</th>
+                        <th>Role</th>
+                        <th>Phone</th>
+                        <th>Joined Date</th>
+                        <th>Account Status</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">{{ u.get_full_name|default:u.username }}</div>
+                                <div class="text-muted small">{{ u.email }}</div>
+                            </td>
+                            <td>
+                                <span class="badge {% if u.role == 'STUDENT' %}bg-primary{% elif u.role == 'RECRUITER' %}bg-info text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ u.get_role_display }}
+                                </span>
+                            </td>
+                            <td class="small">{{ u.phone|default:"—" }}</td>
+                            <td class="small text-muted">{{ u.date_joined|date:"M d, Y" }}</td>
+                            <td>
+                                {% if u.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Deactivated</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'analytics:toggle_user_status' u.id %}" class="btn btn-sm {% if u.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}">
+                                    {% if u.is_active %}Deactivate{% else %}Activate{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                No user accounts match your search.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

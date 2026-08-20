@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Saved Opportunities – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1"><i class="bi bi-bookmark-fill text-warning me-2"></i>Saved Opportunities</h3>
+            <p class="text-muted small mb-0">Jobs and internships you have bookmarked for later review and application.</p>
+        </div>
+        <a href="{% url 'opportunities:list' %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-search me-1"></i> Browse More
+        </a>
+    </div>
+
+    <div class="row g-4">
+        {% for item in saved_items %}
+            {% with opp=item.opportunity %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="custom-card p-4 h-100 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center">
+                                {% if opp.company.logo %}
+                                    <img src="{{ opp.company.logo.url }}" alt="{{ opp.company.name }}" class="rounded-3 me-3" style="width: 44px; height: 44px; object-fit: contain;">
+                                {% else %}
+                                    <div class="bg-light text-primary rounded-3 d-flex align-items-center justify-content-center me-3 border" style="width: 44px; height: 44px; font-weight: 700;">
+                                        {{ opp.company.name|slice:":2"|upper }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark">{{ opp.company.name }}</h6>
+                                    <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ opp.location }}</span>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'students:toggle_save' opp.id %}" class="btn btn-sm btn-outline-danger" title="Remove bookmark">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+
+                        <h5 class="fw-bold mb-2">
+                            <a href="{% url 'opportunities:detail' opp.id %}" class="text-decoration-none text-dark">
+                                {{ opp.title }}
+                            </a>
+                        </h5>
+
+                        <div class="mb-3">
+                            <span class="badge {% if opp.opportunity_type == 'INTERNSHIP' %}bg-primary-subtle text-primary border border-primary-subtle{% else %}bg-success-subtle text-success border border-success-subtle{% endif %} me-1">
+                                {{ opp.get_opportunity_type_display }}
+                            </span>
+                            <span class="badge bg-light text-dark border">{{ opp.get_work_mode_display }}</span>
+                        </div>
+
+                        <div class="text-muted small mb-3">
+                            {% if opp.stipend %}<div><i class="bi bi-cash me-1 text-success"></i><strong>{{ opp.stipend }}</strong></div>{% endif %}
+                            {% if opp.salary %}<div><i class="bi bi-wallet2 me-1 text-success"></i><strong>{{ opp.salary }}</strong></div>{% endif %}
+                            <div><i class="bi bi-calendar-event me-1"></i>Deadline: {{ opp.application_deadline|date:"M d, Y" }}</div>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-top">
+                            <a href="{% url 'opportunities:detail' opp.id %}" class="btn btn-primary-custom btn-sm w-100">
+                                View Details & Apply
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endwith %}
+        {% empty %}
+            <div class="col-12 text-center py-5 custom-card">
+                <i class="bi bi-bookmark-x fs-1 text-muted d-block mb-3"></i>
+                <h5 class="fw-bold">No saved opportunities yet</h5>
+                <p class="text-muted small mb-3">Explore the opportunity catalog and click the bookmark icon on roles you're interested in.</p>
+                <a href="{% url 'opportunities:list' %}" class="btn btn-primary-custom btn-sm">Explore Openings</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

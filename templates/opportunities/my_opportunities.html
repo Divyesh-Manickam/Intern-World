@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}My Job Postings – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">My Posted Opportunities</h3>
+            <p class="text-muted small mb-0">Manage all your live, pending, and closed internship and placement listings.</p>
+        </div>
+        <a href="{% url 'opportunities:create' %}" class="btn btn-primary-custom btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Post New Role
+        </a>
+    </div>
+
+    <div class="custom-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Job Title</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Applications</th>
+                        <th>Shortlisted</th>
+                        <th>Selected</th>
+                        <th>Deadline</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opp in opportunities %}
+                        <tr>
+                            <td class="ps-4">
+                                <a href="{% url 'opportunities:detail' opp.id %}" class="fw-bold text-dark text-decoration-none">
+                                    {{ opp.title }}
+                                </a>
+                                <div class="text-muted small">{{ opp.location }} • {{ opp.get_work_mode_display }}</div>
+                            </td>
+                            <td>
+                                <span class="badge {% if opp.opportunity_type == 'INTERNSHIP' %}bg-primary-subtle text-primary{% else %}bg-success-subtle text-success{% endif %}">
+                                    {{ opp.get_opportunity_type_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if opp.status == 'APPROVED' %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% elif opp.status == 'PENDING' %}
+                                    <span class="badge bg-warning text-dark">Pending Review</span>
+                                {% elif opp.status == 'CLOSED' %}
+                                    <span class="badge bg-secondary">Closed</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'recruiters:applicants' %}?opportunity={{ opp.id }}" class="fw-bold text-primary text-decoration-none">
+                                    {{ opp.total_apps }}
+                                </a>
+                            </td>
+                            <td><span class="badge bg-warning text-dark">{{ opp.shortlisted_apps }}</span></td>
+                            <td><span class="badge bg-success">{{ opp.selected_apps }}</span></td>
+                            <td class="small">{{ opp.application_deadline|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <a href="{% url 'recruiters:applicants' %}?opportunity={{ opp.id }}" class="btn btn-sm btn-outline-primary" title="View Applicants">
+                                        <i class="bi bi-people"></i>
+                                    </a>
+                                    <a href="{% url 'opportunities:edit' opp.id %}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    {% if opp.status != 'CLOSED' %}
+                                        <a href="{% url 'opportunities:close' opp.id %}" class="btn btn-sm btn-outline-warning" title="Close Position" onclick="return confirm('Close applications for this position?');">
+                                            <i class="bi bi-slash-circle"></i>
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'opportunities:delete' opp.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Permanently delete this posting?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-folder2-open fs-1 d-block mb-2"></i>
+                                You haven't posted any opportunities yet.
+                                <div class="mt-2">
+                                    <a href="{% url 'opportunities:create' %}" class="btn btn-primary-custom btn-sm">Post Your First Opportunity</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

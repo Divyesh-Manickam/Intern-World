@@ -1,0 +1,58 @@
+<footer class="footer-custom mt-auto">
+    <div class="container">
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-primary me-2 p-2 rounded-3">
+                        <i class="bi bi-briefcase-fill text-white fs-5"></i>
+                    </span>
+                    <span class="text-white fs-4 fw-bold">Intern<span class="text-info">World</span></span>
+                </div>
+                <p class="small text-muted mb-3">
+                    The next-generation campus placement and internship platform bridging student talent with forward-thinking employers.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-muted fs-5"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-muted fs-5"><i class="bi bi-github"></i></a>
+                    <a href="#" class="text-muted fs-5"><i class="bi bi-twitter-x"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="text-white fw-bold mb-3">For Students</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="{% url 'opportunities:list' %}" class="footer-link">Browse Jobs</a></li>
+                    <li class="mb-2"><a href="{% url 'accounts:register_student' %}" class="footer-link">Create Profile</a></li>
+                    <li class="mb-2"><a href="{% url 'opportunities:list' %}?opportunity_type=INTERNSHIP" class="footer-link">Internships</a></li>
+                    <li class="mb-2"><a href="{% url 'opportunities:list' %}?opportunity_type=PLACEMENT" class="footer-link">Placements</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="text-white fw-bold mb-3">For Employers</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="{% url 'accounts:register_recruiter' %}" class="footer-link">Post an Internship</a></li>
+                    <li class="mb-2"><a href="{% url 'accounts:register_recruiter' %}" class="footer-link">Campus Hiring</a></li>
+                    <li class="mb-2"><a href="{% url 'accounts:login' %}" class="footer-link">Recruiter Login</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h6 class="text-white fw-bold mb-3">Contact & Support</h6>
+                <p class="small text-muted mb-2">
+                    <i class="bi bi-geo-alt me-2 text-info"></i> Campus Placement Cell & Career Centre
+                </p>
+                <p class="small text-muted mb-2">
+                    <i class="bi bi-envelope me-2 text-info"></i> placements@internworld.edu
+                </p>
+                <p class="small text-muted">
+                    <i class="bi bi-shield-check me-2 text-info"></i> Production Ready Django Web Application
+                </p>
+            </div>
+        </div>
+
+        <div class="border-top border-secondary pt-3 text-center small text-muted">
+            <p class="mb-0">&copy; 2026 InternWorld – Internship & Placement Portal. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold mb-2">Our Mission</span>
+                <h1 class="fw-bold">Empowering Student Careers & Campus Placements</h1>
+                <p class="lead text-muted">
+                    InternWorld is an integrated full-stack platform engineered to bridge academic talent with industry leaders.
+                </p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="custom-card p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary text-white rounded-3 p-3 me-3">
+                                <i class="bi bi-mortarboard-fill fs-4"></i>
+                            </div>
+                            <h4 class="fw-bold mb-0">For Students</h4>
+                        </div>
+                        <p class="text-muted">
+                            Gain access to verified internships and full-time placement opportunities from high-growth startups to Fortune 500 companies. With our intelligent matching algorithm, students receive compatibility scores based on their skills, CGPA, degree, and department.
+                        </p>
+                        <ul class="list-unstyled text-muted small">
+                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> PDF Resume validation & keyword indexing</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Real-time multi-stage application tracking</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Transparent match score & breakdown criteria</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="custom-card p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-info text-white rounded-3 p-3 me-3">
+                                <i class="bi bi-building-check fs-4"></i>
+                            </div>
+                            <h4 class="fw-bold mb-0">For Recruiters</h4>
+                        </div>
+                        <p class="text-muted">
+                            Streamline your campus hiring pipeline. Filter hundreds of applicants in seconds by CGPA cutoffs, required technical skills, academic departments, and graduation years. Schedule interviews and manage feedback in one place.
+                        </p>
+                        <ul class="list-unstyled text-muted small">
+                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Automated candidate qualification filters</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> One-click interview scheduling & video meeting links</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Company branding and verified talent acquisition credentials</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="custom-card p-4 p-md-5 mb-5 bg-light border-0">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="fw-bold mb-2">Ready to kickstart your professional journey?</h4>
+                        <p class="text-muted mb-0">Join thousands of students and top hiring partners on InternWorld today.</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a href="{% url 'accounts:register_student' %}" class="btn btn-primary-custom px-4 py-2">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

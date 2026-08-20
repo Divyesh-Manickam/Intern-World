@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}Explore Opportunities – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Explore Internships & Placements</h2>
+        <p class="text-muted small mb-0">Discover verified positions from top recruiters tailored to your academic profile.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Filter Sidebar -->
+        <div class="col-lg-3">
+            <div class="custom-card p-3 p-md-4 sticky-top" style="top: 80px; z-index: 10;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-funnel-fill text-primary me-2"></i>Filters</h6>
+                    <a href="{% url 'opportunities:list' %}" class="small text-muted text-decoration-none">Reset</a>
+                </div>
+
+                <form method="GET" action="{% url 'opportunities:list' %}">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Keyword Search</label>
+                        {{ filter.form.search }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Opportunity Type</label>
+                        {{ filter.form.opportunity_type }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Work Mode</label>
+                        {{ filter.form.work_mode }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Location / City</label>
+                        {{ filter.form.location }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Company Name</label>
+                        {{ filter.form.company }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">Skill Filter</label>
+                        {{ filter.form.required_skills }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-custom btn-sm w-100 py-2">
+                        Apply Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Catalog List -->
+        <div class="col-lg-9">
+            <!-- Results Bar & Sorting -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 p-3 custom-card">
+                <span class="text-muted small">
+                    Showing <strong>{{ page_obj.start_index|default:0 }}–{{ page_obj.end_index|default:0 }}</strong> of <strong>{{ total_count }}</strong> opportunities
+                </span>
+                <div class="d-flex align-items-center mt-2 mt-sm-0">
+                    <label class="small text-muted me-2">Sort by:</label>
+                    <form method="GET" class="d-inline">
+                        <!-- Retain existing GET params except sort -->
+                        {% for key, val in request.GET.items %}
+                            {% if key != 'sort' and key != 'page' %}
+                                <input type="hidden" name="{{ key }}" value="{{ val }}">
+                            {% endif %}
+                        {% endfor %}
+                        <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="-created_at" {% if current_sort == '-created_at' %}selected{% endif %}>Newest First</option>
+                            <option value="application_deadline" {% if current_sort == 'application_deadline' %}selected{% endif %}>Deadline (Urgent)</option>
+                            <option value="-openings_count" {% if current_sort == '-openings_count' %}selected{% endif %}>Most Openings</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Opportunities Grid -->
+            <div class="row g-3 mb-4">
+                {% for opp in page_obj %}
+                    <div class="col-md-6 col-xl-4">
+                        <div class="custom-card custom-card-hover p-3 h-100 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    {% if opp.company.logo %}
+                                        <img src="{{ opp.company.logo.url }}" alt="{{ opp.company.name }}" class="rounded-2 me-2" style="width: 38px; height: 38px; object-fit: contain;">
+                                    {% else %}
+                                        <div class="bg-light text-primary rounded-2 d-flex align-items-center justify-content-center me-2 border" style="width: 38px; height: 38px; font-weight: 700; font-size: 0.85rem;">
+                                            {{ opp.company.name|slice:":2"|upper }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="overflow-hidden">
+                                        <h6 class="fw-bold mb-0 text-dark small text-truncate" style="max-width: 140px;">{{ opp.company.name }}</h6>
+                                        <span class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-geo-alt me-1"></i>{{ opp.location }}</span>
+                                    </div>
+                                </div>
+
+                                {% if user.is_authenticated and user.is_student %}
+                                    <button class="btn btn-link text-muted p-0 btn-save-toggle" data-opp-id="{{ opp.id }}">
+                                        {% if opp.id in saved_ids %}
+                                            <i class="bi bi-bookmark-fill text-primary fs-5"></i>
+                                        {% else %}
+                                            <i class="bi bi-bookmark fs-5"></i>
+                                        {% endif %}
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            <!-- Match Score Badge if Student -->
+                            {% if opp.match_breakdown %}
+                                <div class="mb-2">
+                                    <span class="badge match-badge {% if opp.match_breakdown.score >= 80 %}match-high{% elif opp.match_breakdown.score >= 50 %}match-mid{% else %}match-low{% endif %}">
+                                        <i class="bi bi-bullseye"></i> {{ opp.match_breakdown.score }}% Match
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            <h6 class="fw-bold mb-2">
+                                <a href="{% url 'opportunities:detail' opp.id %}" class="text-decoration-none text-dark">
+                                    {{ opp.title }}
+                                </a>
+                            </h6>
+
+                            <div class="mb-2">
+                                <span class="badge {% if opp.opportunity_type == 'INTERNSHIP' %}bg-primary-subtle text-primary border border-primary-subtle{% else %}bg-success-subtle text-success border border-success-subtle{% endif %} me-1" style="font-size: 0.7rem;">
+                                    {{ opp.get_opportunity_type_display }}
+                                </span>
+                                <span class="badge bg-light text-dark border" style="font-size: 0.7rem;">{{ opp.get_work_mode_display }}</span>
+                            </div>
+
+                            <div class="text-muted small mb-2" style="font-size: 0.8rem;">
+                                {% if opp.opportunity_type == 'INTERNSHIP' and opp.stipend %}
+                                    <div><i class="bi bi-cash me-1 text-success"></i><strong>{{ opp.stipend }}</strong></div>
+                                {% elif opp.salary %}
+                                    <div><i class="bi bi-wallet2 me-1 text-success"></i><strong>{{ opp.salary }}</strong></div>
+                                {% endif %}
+                                <div><i class="bi bi-calendar-event me-1"></i>Deadline: {{ opp.application_deadline|date:"M d, Y" }}</div>
+                            </div>
+
+                            <div class="mb-3 mt-auto">
+                                {% for skill in opp.skills_list|slice:":3" %}
+                                    <span class="skill-tag" style="font-size: 0.7rem;">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="pt-2 border-top">
+                                <a href="{% url 'opportunities:detail' opp.id %}" class="btn btn-outline-primary btn-sm w-100 py-1" style="font-size: 0.8rem;">
+                                    View Details & Apply
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5 custom-card">
+                        <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
+                        <h5 class="fw-bold">No matching opportunities found</h5>
+                        <p class="text-muted small">Try broadening your search keywords or clearing some filters.</p>
+                        <a href="{% url 'opportunities:list' %}" class="btn btn-outline-primary btn-sm">Clear All Filters</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% for key, val in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ val }}{% endif %}{% endfor %}">&laquo; First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, val in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ val }}{% endif %}{% endfor %}">Prev</a>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, val in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ val }}{% endif %}{% endfor %}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, val in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ val }}{% endif %}{% endfor %}">Last &raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

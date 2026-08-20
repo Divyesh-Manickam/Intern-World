@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Administrator Dashboard – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-shield-lock-fill text-primary me-2"></i>Administration Center</h2>
+            <p class="text-muted small mb-0">Platform overview, pending approvals, analytics, and ecosystem controls.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'analytics:admin_users' %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-people me-1"></i> Users
+            </a>
+            <a href="{% url 'analytics:admin_companies' %}" class="btn btn-outline-info btn-sm">
+                <i class="bi bi-building me-1"></i> Companies
+            </a>
+            <a href="{% url 'analytics:admin_opportunities' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-briefcase me-1"></i> Opportunities
+            </a>
+            <a href="/admin/" class="btn btn-primary-custom btn-sm">
+                <i class="bi bi-sliders me-1"></i> Django Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- Overview Counters -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-primary border-4">
+                <h3 class="fw-bold mb-0 text-primary">{{ stats.total_students }}</h3>
+                <div class="text-muted small">Total Students</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-info border-4">
+                <h3 class="fw-bold mb-0 text-info">{{ stats.total_recruiters }}</h3>
+                <div class="text-muted small">Recruiters</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-warning border-4">
+                <h3 class="fw-bold mb-0 text-warning">{{ stats.total_companies }}</h3>
+                <div class="text-muted small">Companies ({{ stats.verified_companies }} Ver.)</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-success border-4">
+                <h3 class="fw-bold mb-0 text-success">{{ stats.total_opportunities }}</h3>
+                <div class="text-muted small">Total Jobs</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-secondary border-4" style="border-left-color: #8b5cf6 !important;">
+                <h3 class="fw-bold mb-0" style="color: #8b5cf6;">{{ stats.total_applications }}</h3>
+                <div class="text-muted small">Applications</div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="custom-card p-3 text-center h-100 border-start border-danger border-4">
+                <h3 class="fw-bold mb-0 text-danger">{{ stats.selection_rate }}%</h3>
+                <div class="text-muted small">Placement Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Queues Row -->
+    <div class="row g-4 mb-4">
+        <!-- Pending Company Verifications -->
+        <div class="col-lg-6">
+            <div class="custom-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-clock-history text-warning me-2"></i>Pending Company Verifications ({{ pending_companies|length }})
+                    </h5>
+                    <a href="{% url 'analytics:admin_companies' %}?status=PENDING" class="small text-decoration-none">View Queue</a>
+                </div>
+                {% if pending_companies %}
+                    <div class="list-group list-group-flush">
+                        {% for comp in pending_companies %}
+                            <div class="list-group-item px-0 py-3 border-bottom d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold text-dark">{{ comp.name }}</div>
+                                    <div class="text-muted small">{{ comp.industry }} • {{ comp.location }}</div>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{% url 'analytics:verify_company' comp.id %}" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check-lg"></i> Verify
+                                    </a>
+                                    <a href="{% url 'analytics:reject_company' comp.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x-lg"></i> Reject
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-muted small">
+                        <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+                        No pending company verification requests!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pending Opportunity Approvals -->
+        <div class="col-lg-6">
+            <div class="custom-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-hourglass-split text-info me-2"></i>Opportunity Approvals ({{ pending_opportunities|length }})
+                    </h5>
+                    <a href="{% url 'analytics:admin_opportunities' %}?status=PENDING" class="small text-decoration-none">View Queue</a>
+                </div>
+                {% if pending_opportunities %}
+                    <div class="list-group list-group-flush">
+                        {% for opp in pending_opportunities %}
+                            <div class="list-group-item px-0 py-3 border-bottom d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'opportunities:detail' opp.id %}" target="_blank" class="fw-bold text-dark text-decoration-none">
+                                        {{ opp.title }}
+                                    </a>
+                                    <div class="text-muted small">{{ opp.company.name }} • {{ opp.get_opportunity_type_display }}</div>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{% url 'analytics:approve_opportunity' opp.id %}" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check-lg"></i> Approve
+                                    </a>
+                                    <a href="{% url 'analytics:reject_opportunity' opp.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x-lg"></i> Reject
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4 text-muted small">
+                        <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+                        All posted opportunities are reviewed and up to date!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Monthly Trend -->
+        <div class="col-lg-7">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-graph-up-arrow text-primary me-2"></i>Monthly Application Activity</h5>
+                <div style="height: 250px;">
+                    <canvas id="monthlyAppsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Demand -->
+        <div class="col-lg-5">
+            <div class="custom-card p-4 h-100">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart-fill text-info me-2"></i>Top In-Demand Skills</h5>
+                <div style="height: 250px;">
+                    <canvas id="popularSkillsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Platform Applications -->
+    <div class="custom-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-dark mb-0">Live Application Stream</h5>
+            <a href="{% url 'analytics:admin_applications' %}" class="btn btn-outline-primary btn-sm">View All Applications</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Applied For</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in recent_applications %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold">{{ a.student.get_full_name }}</div>
+                                <div class="text-muted small">{{ a.student.email }}</div>
+                            </td>
+                            <td>{{ a.opportunity.title }}</td>
+                            <td>{{ a.opportunity.company.name }}</td>
+                            <td>
+                                <span class="badge bg-{{ a.badge_color }}">{{ a.get_status_display }}</span>
+                            </td>
+                            <td class="small text-muted">{{ a.applied_at|date:"M d, Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const monthlyLabels = {{ monthly_apps.labels|safe }};
+        const monthlyData = {{ monthly_apps.data|safe }};
+        renderMonthlyApplicationsChart('monthlyAppsChart', monthlyLabels, monthlyData);
+
+        const skillLabels = {{ popular_skills.labels|safe }};
+        const skillData = {{ popular_skills.data|safe }};
+        renderPopularSkillsChart('popularSkillsChart', skillLabels, skillData);
+    });
+</script>
+{% endblock %}

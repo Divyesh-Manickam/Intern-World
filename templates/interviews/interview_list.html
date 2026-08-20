@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Interview Schedules – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-calendar2-check-fill text-primary me-2"></i>Interview Schedules</h2>
+            <p class="text-muted small mb-0">View all upcoming and completed interview sessions.</p>
+        </div>
+    </div>
+
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs mb-4" id="interviewTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-semibold" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab">
+                Upcoming Sessions ({{ upcoming_interviews|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-semibold" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab">
+                Past / Completed ({{ past_interviews|length }})
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="interviewTabsContent">
+        <!-- Upcoming Tab -->
+        <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+            <div class="row g-4">
+                {% for item in upcoming_interviews %}
+                    <div class="col-md-6">
+                        <div class="custom-card p-4 h-100 border-start border-primary border-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h5 class="fw-bold mb-1">{{ item.application.opportunity.title }}</h5>
+                                    <div class="text-muted small"><strong>{{ item.application.opportunity.company.name }}</strong></div>
+                                </div>
+                                <span class="badge bg-primary px-3 py-1">Scheduled</span>
+                            </div>
+
+                            <div class="p-3 bg-light rounded-3 my-3 border small text-muted">
+                                <div class="mb-1"><i class="bi bi-calendar-event me-2 text-primary"></i><strong>Date:</strong> {{ item.interview_date }}</div>
+                                <div class="mb-1"><i class="bi bi-clock me-2 text-primary"></i><strong>Time:</strong> {{ item.interview_time|time:"g:i A" }}</div>
+                                <div class="mb-1"><i class="bi bi-person-video3 me-2 text-primary"></i><strong>Type:</strong> {{ item.get_interview_type_display }}</div>
+                                {% if item.location %}
+                                    <div class="mb-1"><i class="bi bi-geo-alt me-2 text-primary"></i><strong>Location:</strong> {{ item.location }}</div>
+                                {% endif %}
+                                {% if item.instructions %}
+                                    <div class="mt-2 pt-2 border-top"><strong>Instructions:</strong> {{ item.instructions }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                {% if item.meeting_link %}
+                                    <a href="{{ item.meeting_link }}" target="_blank" class="btn btn-success btn-sm px-4">
+                                        <i class="bi bi-camera-video-fill me-1"></i> Join Video Call
+                                    </a>
+                                {% else %}
+                                    <span></span>
+                                {% endif %}
+
+                                {% if user.is_recruiter or user.is_admin_user %}
+                                    <a href="{% url 'interviews:cancel' item.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Cancel this interview session?');">
+                                        Cancel Session
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5 custom-card text-muted">
+                        <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                        No upcoming interviews scheduled at this time.
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Past Tab -->
+        <div class="tab-pane fade" id="past" role="tabpanel">
+            <div class="row g-4">
+                {% for item in past_interviews %}
+                    <div class="col-md-6">
+                        <div class="custom-card p-4 h-100 opacity-75">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h5 class="fw-bold mb-1">{{ item.application.opportunity.title }}</h5>
+                                    <div class="text-muted small">{{ item.application.opportunity.company.name }}</div>
+                                </div>
+                                <span class="badge {% if item.status == 'COMPLETED' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ item.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="small text-muted mt-2">
+                                <div>Date: {{ item.interview_date }} at {{ item.interview_time|time:"g:i A" }}</div>
+                                <div>Format: {{ item.get_interview_type_display }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5 custom-card text-muted">
+                        No past interview records found.
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

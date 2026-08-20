@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="bi bi-bell-fill text-primary me-2"></i>Notifications Center</h3>
+                    <p class="text-muted small mb-0">Stay informed on application updates, interview alerts, and system notices.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'notifications:mark_all_read' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-check2-all me-1"></i> Mark All as Read
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filter Pills -->
+            <div class="mb-3">
+                <a href="{% url 'notifications:list' %}" class="btn btn-sm {% if not unread_only %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 me-1">
+                    All
+                </a>
+                <a href="{% url 'notifications:list' %}?unread=true" class="btn btn-sm {% if unread_only %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                    Unread Only
+                </a>
+            </div>
+
+            <!-- Notifications List -->
+            <div class="custom-card p-0 overflow-hidden">
+                <div class="list-group list-group-flush">
+                    {% for n in notifications %}
+                        <a href="{% url 'notifications:mark_read' n.id %}" class="list-group-item list-group-item-action p-3 {% if not n.is_read %}bg-light border-start border-primary border-4{% endif %}">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-primary-subtle text-primary rounded-circle p-2 me-3 mt-1">
+                                    <i class="bi {{ n.icon_class }} fs-5"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h6 class="fw-bold mb-0 text-dark">{{ n.title }}</h6>
+                                        <small class="text-muted">{{ n.created_at|timesince }} ago</small>
+                                    </div>
+                                    <p class="text-muted small mb-0">{{ n.message }}</p>
+                                </div>
+                                {% if not n.is_read %}
+                                    <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.6rem;">New</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% empty %}
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-bell-slash fs-1 d-block mb-2"></i>
+                            No notifications to display.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

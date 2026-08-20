@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ student.get_full_name }} – Applicant Review{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb & Navigation -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb small mb-1">
+                    <li class="breadcrumb-item"><a href="{% url 'recruiters:applicants' %}" class="text-decoration-none">Applicants</a></li>
+                    <li class="breadcrumb-item active">{{ student.get_full_name }}</li>
+                </ol>
+            </nav>
+            <h3 class="fw-bold mb-0">{{ student.get_full_name }}</h3>
+        </div>
+        <a href="{% url 'recruiters:applicants' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Applicants
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Column: Dossier -->
+        <div class="col-lg-8">
+            <!-- Application Snapshot Card -->
+            <div class="custom-card p-4 mb-4 border-start border-primary border-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="text-muted small">Applied For:</span>
+                        <h5 class="fw-bold mb-1">
+                            <a href="{% url 'opportunities:detail' application.opportunity.id %}" class="text-dark text-decoration-none">
+                                {{ application.opportunity.title }}
+                            </a>
+                        </h5>
+                    </div>
+                    <span class="badge bg-{{ application.badge_color }} fs-6 px-3 py-2">
+                        {{ application.get_status_display }}
+                    </span>
+                </div>
+                <div class="text-muted small">
+                    Submitted on {{ application.applied_at|date:"F d, Y at g:i A" }}
+                </div>
+
+                {% if application.cover_letter %}
+                    <div class="mt-3 pt-3 border-top">
+                        <h6 class="fw-bold small text-muted text-uppercase mb-2">Candidate Cover Note</h6>
+                        <p class="text-muted small mb-0 fst-italic">"{{ application.cover_letter }}"</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Resume & Skills Card -->
+            <div class="custom-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-primary mb-0">Candidate Resume & Skills</h5>
+                    {% if application.resume %}
+                        <a href="{{ application.resume.url }}" target="_blank" class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Open Resume PDF
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <h6 class="fw-semibold small text-muted text-uppercase mb-2">Technical Skills</h6>
+                    {% for skill in profile.skills_list %}
+                        <span class="skill-tag px-3 py-1 fs-6">{{ skill }}</span>
+                    {% empty %}
+                        <span class="text-muted small">No technical skills listed.</span>
+                    {% endfor %}
+                </div>
+
+                {% if profile.soft_skills %}
+                    <div class="mb-3">
+                        <h6 class="fw-semibold small text-muted text-uppercase mb-2">Soft Skills</h6>
+                        <span class="text-dark small">{{ profile.soft_skills }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Projects -->
+            <div class="custom-card p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-3">Projects Portfolio</h5>
+                {% for p in projects %}
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h6 class="fw-bold mb-1">{{ p.title }}</h6>
+                            {% if p.project_url %}
+                                <a href="{{ p.project_url }}" target="_blank" class="small text-primary text-decoration-none">
+                                    <i class="bi bi-link-45deg me-1"></i>Project Link
+                                </a>
+                            {% endif %}
+                        </div>
+                        <p class="text-muted small mb-2">{{ p.description }}</p>
+                        <div class="small">
+                            <strong class="text-secondary">Technologies:</strong> <span class="badge bg-secondary">{{ p.technologies }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted small mb-0">No projects added to profile.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Experience & Certifications -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="custom-card p-4 h-100">
+                        <h5 class="fw-bold text-primary mb-3">Prior Experience</h5>
+                        {% for exp in experiences %}
+                            <div class="mb-3 pb-2 border-bottom">
+                                <div class="fw-bold small">{{ exp.role }}</div>
+                                <div class="text-muted small">{{ exp.company }}</div>
+                                <div class="text-muted" style="font-size: 0.75rem;">{{ exp.start_date }} – {% if exp.is_current %}Present{% else %}{{ exp.end_date }}{% endif %}</div>
+                                {% if exp.description %}<p class="small text-muted mt-1 mb-0">{{ exp.description }}</p>{% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No prior experience listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="custom-card p-4 h-100">
+                        <h5 class="fw-bold text-primary mb-3">Certifications</h5>
+                        {% for cert in certifications %}
+                            <div class="mb-3 pb-2 border-bottom">
+                                <div class="fw-bold small">{{ cert.name }}</div>
+                                <div class="text-muted small">{{ cert.issuing_organization }} ({{ cert.issue_date }})</div>
+                                {% if cert.credential_url %}
+                                    <a href="{{ cert.credential_url }}" target="_blank" class="small text-primary text-decoration-none">Verify</a>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No certifications listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Status Update & Interview Scheduling -->
+        <div class="col-lg-4">
+            <!-- Status Update Card -->
+            <div class="custom-card p-4 mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-toggles me-2 text-primary"></i>Update Candidate Status</h5>
+                <form method="POST" action="{% url 'recruiters:update_status' application.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Application Stage</label>
+                        {{ status_form.status }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Private Recruiter Notes</label>
+                        {{ status_form.recruiter_notes }}
+                        <div class="form-text small">Visible only to recruiters within your organization.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom btn-sm w-100">
+                        Save Status & Notes
+                    </button>
+                </form>
+            </div>
+
+            <!-- Schedule Interview Card -->
+            <div class="custom-card p-4 mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-calendar-plus text-primary me-2"></i>Interviews</h5>
+                
+                {% if scheduled_interviews %}
+                    <div class="list-group list-group-flush mb-3">
+                        {% for i in scheduled_interviews %}
+                            <div class="list-group-item px-0 py-2 border-bottom">
+                                <div class="fw-bold small">{{ i.interview_date }} at {{ i.interview_time|time:"g:i A" }}</div>
+                                <div class="text-muted small">{{ i.get_interview_type_display }}</div>
+                                {% if i.meeting_link %}
+                                    <a href="{{ i.meeting_link }}" target="_blank" class="small text-primary text-decoration-none">Join Meeting</a>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'interviews:schedule' application.id %}" class="btn btn-outline-primary btn-sm w-100">
+                    <i class="bi bi-calendar-event me-1"></i> Schedule Interview
+                </a>
+            </div>
+
+            <!-- Academic Snapshot -->
+            <div class="custom-card p-4">
+                <h6 class="fw-bold mb-3 text-dark">Academic Overview</h6>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">College:</span>
+                    <strong>{{ profile.college }}</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Degree & Department:</span>
+                    <strong>{{ profile.degree }} ({{ profile.department }})</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Graduation Year:</span>
+                    <strong>{{ profile.graduation_year }}</strong>
+                </div>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">CGPA:</span>
+                    <span class="badge bg-light text-primary border fs-6 fw-bold">{{ profile.cgpa }} / 10.00</span>
+                </div>
+                <div class="small">
+                    <span class="text-muted d-block">Contact:</span>
+                    <div><i class="bi bi-envelope me-1"></i>{{ student.email }}</div>
+                    <div><i class="bi bi-telephone me-1"></i>{{ student.phone|default:"N/A" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

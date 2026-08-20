@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Platform Applications – Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Platform Applications Monitor</h2>
+            <p class="text-muted small mb-0">Cross-portal audit of all student applications, stages, and recruiter engagement.</p>
+        </div>
+        <a href="{% url 'analytics:admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="custom-card p-3 p-md-4 mb-4">
+        <form method="GET" action="{% url 'analytics:admin_applications' %}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Application Statuses</option>
+                    {% for code, label in status_choices %}
+                        <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small fw-semibold">Search Candidate / Job / Company</label>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ search|default:'' }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-custom btn-sm w-100 py-1">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="custom-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Candidate</th>
+                        <th>Applied For</th>
+                        <th>Company</th>
+                        <th>Resume</th>
+                        <th>Status</th>
+                        <th>Applied Date</th>
+                        <th class="text-end pe-4">Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in applications %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">{{ a.student.get_full_name }}</div>
+                                <div class="text-muted small">{{ a.student.email }}</div>
+                            </td>
+                            <td>
+                                <a href="{% url 'opportunities:detail' a.opportunity.id %}" target="_blank" class="fw-semibold text-dark text-decoration-none small">
+                                    {{ a.opportunity.title }}
+                                </a>
+                            </td>
+                            <td class="small">{{ a.opportunity.company.name }}</td>
+                            <td>
+                                {% if a.resume %}
+                                    <a href="{{ a.resume.url }}" target="_blank" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 0.75rem;">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                                    </a>
+                                {% else %}—{% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ a.badge_color }}">{{ a.get_status_display }}</span>
+                            </td>
+                            <td class="small text-muted">{{ a.applied_at|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4 small text-muted">{{ a.updated_at|date:"M d" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                No applications found.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

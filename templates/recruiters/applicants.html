@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Applicants – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Candidate Applicants</h2>
+            <p class="text-muted small mb-0">Search, filter, evaluate, and shortlist candidate profiles across your postings.</p>
+        </div>
+        <a href="{% url 'recruiters:dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Dashboard
+        </a>
+    </div>
+
+    <!-- Filter Bar Card -->
+    <div class="custom-card p-3 p-md-4 mb-4">
+        <form method="GET" action="{% url 'recruiters:applicants' %}" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Job Posting</label>
+                <select name="opportunity" class="form-select form-select-sm">
+                    <option value="">All My Postings</option>
+                    {% for opp in my_opportunities %}
+                        <option value="{{ opp.id }}" {% if selected_opportunity == opp.id|stringformat:"i" %}selected{% endif %}>
+                            {{ opp.title|truncatechars:35 }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Status</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    {% for code, label in status_choices %}
+                        <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Min CGPA</label>
+                <input type="number" step="0.1" name="min_cgpa" class="form-control form-control-sm" placeholder="e.g. 7.5" value="{{ min_cgpa|default:'' }}">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Search Name / Email / Skills</label>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search candidate..." value="{{ search_query|default:'' }}">
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-custom btn-sm w-100 py-1">
+                    <i class="bi bi-funnel me-1"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Applicants Table -->
+    <div class="custom-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Candidate</th>
+                        <th>College & Dept</th>
+                        <th>CGPA</th>
+                        <th>Applied For</th>
+                        <th>Skills</th>
+                        <th>Resume</th>
+                        <th>Status</th>
+                        <th>Applied</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                        <tr>
+                            <td class="ps-4">
+                                <a href="{% url 'recruiters:applicant_detail' app.id %}" class="fw-bold text-dark text-decoration-none">
+                                    {{ app.student.get_full_name }}
+                                </a>
+                                <div class="text-muted small">{{ app.student.email }}</div>
+                            </td>
+                            <td class="small">
+                                <div>{{ app.student.student_profile.college|truncatechars:25 }}</div>
+                                <div class="text-muted">{{ app.student.student_profile.department }} ({{ app.student.student_profile.graduation_year }})</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border fw-bold">{{ app.student.student_profile.cgpa }}</span>
+                            </td>
+                            <td class="small">
+                                <span class="fw-semibold text-dark">{{ app.opportunity.title|truncatechars:25 }}</span>
+                            </td>
+                            <td class="small" style="max-width: 150px;">
+                                {% for skill in app.student.student_profile.skills_list|slice:":2" %}
+                                    <span class="skill-tag" style="font-size: 0.65rem;">{{ skill }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if app.resume %}
+                                    <a href="{{ app.resume.url }}" target="_blank" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 0.75rem;">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted small">None</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ app.badge_color }}">{{ app.get_status_display }}</span>
+                            </td>
+                            <td class="small text-muted">{{ app.applied_at|date:"M d" }}</td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <a href="{% url 'recruiters:applicant_detail' app.id %}" class="btn btn-sm btn-outline-primary" title="View Full Candidate Profile">
+                                        Review
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="bi bi-people fs-1 d-block mb-2"></i>
+                                No candidate applications found matching the selected filters.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

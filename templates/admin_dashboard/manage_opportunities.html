@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Opportunities – Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Opportunity Management & Approvals</h2>
+            <p class="text-muted small mb-0">Review recruiter job postings, approve/reject public visibility, and monitor openings.</p>
+        </div>
+        <a href="{% url 'analytics:admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Admin Dashboard
+        </a>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="custom-card p-3 p-md-4 mb-4">
+        <form method="GET" action="{% url 'analytics:admin_opportunities' %}" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Status Filter</label>
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    {% for code, label in status_choices %}
+                        <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-semibold">Type</label>
+                <select name="type" class="form-select form-select-sm">
+                    <option value="">All Types</option>
+                    {% for code, label in type_choices %}
+                        <option value="{{ code }}" {% if selected_type == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Search Title / Company / Role</label>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search opportunity..." value="{{ search|default:'' }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-custom btn-sm w-100 py-1">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Opportunities Table -->
+    <div class="custom-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Title & Company</th>
+                        <th>Type</th>
+                        <th>Recruiter</th>
+                        <th>Status</th>
+                        <th>Applications</th>
+                        <th>Deadline</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opp in opportunities %}
+                        <tr>
+                            <td class="ps-4">
+                                <a href="{% url 'opportunities:detail' opp.id %}" target="_blank" class="fw-bold text-dark text-decoration-none">
+                                    {{ opp.title }}
+                                </a>
+                                <div class="text-muted small">{{ opp.company.name }} • {{ opp.location }}</div>
+                            </td>
+                            <td>
+                                <span class="badge {% if opp.opportunity_type == 'INTERNSHIP' %}bg-primary-subtle text-primary{% else %}bg-success-subtle text-success{% endif %}">
+                                    {{ opp.get_opportunity_type_display }}
+                                </span>
+                            </td>
+                            <td class="small">{{ opp.recruiter.get_full_name }}</td>
+                            <td>
+                                {% if opp.status == 'APPROVED' %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% elif opp.status == 'PENDING' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% elif opp.status == 'CLOSED' %}
+                                    <span class="badge bg-secondary">Closed</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td class="small fw-semibold text-center">{{ opp.applications.count }}</td>
+                            <td class="small text-muted">{{ opp.application_deadline|date:"M d, Y" }}</td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    {% if opp.status != 'APPROVED' %}
+                                        <a href="{% url 'analytics:approve_opportunity' opp.id %}" class="btn btn-sm btn-success" title="Approve">
+                                            <i class="bi bi-check-lg"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if opp.status != 'REJECTED' %}
+                                        <a href="{% url 'analytics:reject_opportunity' opp.id %}" class="btn btn-sm btn-outline-danger" title="Reject">
+                                            <i class="bi bi-x-lg"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                No opportunities found matching the filter criteria.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

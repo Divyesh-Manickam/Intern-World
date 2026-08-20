@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}My Student Profile – InternWorld{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Left Sidebar: Basic Info & Resume -->
+        <div class="col-lg-4">
+            <div class="custom-card p-4 text-center mb-4">
+                <div class="bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3 fs-1 fw-bold shadow-sm" style="width: 90px; height: 90px;">
+                    {{ user.first_name|default:user.username|make_list|first|upper }}
+                </div>
+                <h4 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h4>
+                <p class="text-muted small mb-2">{{ profile.degree }} in {{ profile.department }}</p>
+                <div class="badge bg-primary-subtle text-primary mb-3">{{ profile.college }}</div>
+
+                <div class="d-flex justify-content-center gap-2 mb-3">
+                    {% if profile.github_url %}
+                        <a href="{{ profile.github_url }}" target="_blank" class="btn btn-sm btn-outline-dark"><i class="bi bi-github"></i></a>
+                    {% endif %}
+                    {% if profile.linkedin_url %}
+                        <a href="{{ profile.linkedin_url }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-linkedin"></i></a>
+                    {% endif %}
+                    {% if profile.portfolio_url %}
+                        <a href="{{ profile.portfolio_url }}" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-globe"></i></a>
+                    {% endif %}
+                </div>
+
+                <a href="{% url 'students:edit_profile' %}" class="btn btn-primary-custom btn-sm w-100">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Profile & Resume
+                </a>
+            </div>
+
+            <!-- Resume Status Card -->
+            <div class="custom-card p-4 mb-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>Uploaded Resume</h6>
+                {% if profile.resume %}
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-filetype-pdf fs-2 text-danger me-3"></i>
+                            <div class="overflow-hidden">
+                                <div class="fw-semibold small text-truncate">{{ profile.resume.name }}</div>
+                                <span class="badge bg-success small">PDF Validated</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ profile.resume.url }}" target="_blank" class="btn btn-outline-primary btn-sm flex-grow-1">
+                            <i class="bi bi-box-arrow-up-right me-1"></i> View / Download
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-3 text-muted small">
+                        <i class="bi bi-upload fs-3 d-block mb-2 text-warning"></i>
+                        No resume uploaded yet.
+                        <div class="mt-2">
+                            <a href="{% url 'students:edit_profile' %}#resume-tab" class="btn btn-sm btn-outline-danger">
+                                Upload PDF Resume
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Career Preferences -->
+            <div class="custom-card p-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-compass-fill text-primary me-2"></i>Preferences</h6>
+                <div class="small mb-2">
+                    <span class="text-muted d-block">Target Roles:</span>
+                    <span class="fw-semibold">{{ profile.preferred_role|default:"Not specified" }}</span>
+                </div>
+                <div class="small">
+                    <span class="text-muted d-block">Preferred Locations:</span>
+                    <span class="fw-semibold">{{ profile.preferred_location|default:"Any / Remote" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Column: Academic, Skills, Projects, Experience -->
+        <div class="col-lg-8">
+            <!-- Bio & Academic -->
+            <div class="custom-card p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-3">About Me</h5>
+                <p class="text-muted mb-4">
+                    {{ profile.bio|default:"No bio provided yet. Add a short bio to introduce your interests and aspirations to recruiters." }}
+                </p>
+
+                <h6 class="fw-bold text-dark mb-3">Academic Details</h6>
+                <div class="row g-3 text-muted small">
+                    <div class="col-md-6"><strong>College:</strong> {{ profile.college }}</div>
+                    <div class="col-md-6"><strong>Degree & Dept:</strong> {{ profile.degree }} ({{ profile.department }})</div>
+                    <div class="col-md-6"><strong>Graduation Year:</strong> {{ profile.graduation_year }}</div>
+                    <div class="col-md-6"><strong>Cumulative CGPA:</strong> <span class="text-primary fw-bold">{{ profile.cgpa }} / 10.00</span></div>
+                    <div class="col-md-6"><strong>Email:</strong> {{ user.email }}</div>
+                    <div class="col-md-6"><strong>Phone:</strong> {{ user.phone|default:"Not provided" }}</div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="custom-card p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-3">Skills & Expertise</h5>
+                <div class="mb-3">
+                    <h6 class="fw-semibold small text-muted text-uppercase mb-2">Technical Skills</h6>
+                    {% for skill in profile.skills_list %}
+                        <span class="skill-tag px-3 py-1 fs-6">{{ skill }}</span>
+                    {% empty %}
+                        <span class="text-muted small">No technical skills added yet.</span>
+                    {% endfor %}
+                </div>
+                {% if profile.soft_skills %}
+                    <div>
+                        <h6 class="fw-semibold small text-muted text-uppercase mb-2">Soft Skills</h6>
+                        <span class="text-dark small">{{ profile.soft_skills }}</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Projects -->
+            <div class="custom-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-primary mb-0">Projects</h5>
+                    <a href="{% url 'students:edit_profile' %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg"></i> Manage</a>
+                </div>
+                {% if profile.projects.all %}
+                    <div class="row g-3">
+                        {% for p in profile.projects.all %}
+                            <div class="col-12">
+                                <div class="p-3 bg-light rounded-3 border">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <h6 class="fw-bold mb-1">{{ p.title }}</h6>
+                                        {% if p.project_url %}
+                                            <a href="{{ p.project_url }}" target="_blank" class="small text-primary text-decoration-none">
+                                                <i class="bi bi-link-45deg me-1"></i>Link
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-muted small mb-2">{{ p.description }}</p>
+                                    <div class="small">
+                                        <strong class="text-secondary">Tech Stack:</strong> <span class="badge bg-secondary-subtle text-secondary">{{ p.technologies }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0">No projects added yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Experience & Certifications -->
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="custom-card p-4 h-100">
+                        <h5 class="fw-bold text-primary mb-3">Experience</h5>
+                        {% for exp in profile.experiences.all %}
+                            <div class="mb-3 pb-2 border-bottom">
+                                <div class="fw-bold small">{{ exp.role }}</div>
+                                <div class="text-muted small">{{ exp.company }}</div>
+                                <div class="text-muted" style="font-size: 0.75rem;">{{ exp.start_date }} – {% if exp.is_current %}Present{% else %}{{ exp.end_date }}{% endif %}</div>
+                                {% if exp.description %}<p class="small text-muted mt-1 mb-0">{{ exp.description }}</p>{% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No prior experience listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="custom-card p-4 h-100">
+                        <h5 class="fw-bold text-primary mb-3">Certifications</h5>
+                        {% for cert in profile.certifications.all %}
+                            <div class="mb-3 pb-2 border-bottom">
+                                <div class="fw-bold small">{{ cert.name }}</div>
+                                <div class="text-muted small">{{ cert.issuing_organization }} • {{ cert.issue_date|date:"Y" }}</div>
+                                {% if cert.credential_url %}
+                                    <a href="{{ cert.credential_url }}" target="_blank" class="small text-primary text-decoration-none">
+                                        <i class="bi bi-patch-check-fill me-1"></i>Verify Credential
+                                    </a>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No certifications added yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
