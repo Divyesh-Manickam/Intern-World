@@ -3,69 +3,142 @@
 {% block title %}About Us – InternWorld{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="text-center mb-5">
-                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold mb-2">Our Mission</span>
-                <h1 class="fw-bold">Empowering Student Careers & Campus Placements</h1>
-                <p class="lead text-muted">
-                    InternWorld is an integrated full-stack platform engineered to bridge academic talent with industry leaders.
+<!-- Hero Section -->
+<section class="hero-section text-center position-relative mb-5">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <span class="badge bg-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">Our Mission</span>
+                <h1 class="display-4 fw-bold mb-3">About InternWorld</h1>
+                <p class="hero-subtitle mb-0">
+                    Empowering Student Careers & Campus Placements. InternWorld is an integrated full-stack platform engineered to bridge academic talent with industry leaders.
                 </p>
-            </div>
-
-            <div class="row g-4 mb-5">
-                <div class="col-md-6">
-                    <div class="custom-card p-4 h-100">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary text-white rounded-3 p-3 me-3">
-                                <i class="bi bi-mortarboard-fill fs-4"></i>
-                            </div>
-                            <h4 class="fw-bold mb-0">For Students</h4>
-                        </div>
-                        <p class="text-muted">
-                            Gain access to verified internships and full-time placement opportunities from high-growth startups to Fortune 500 companies. With our intelligent matching algorithm, students receive compatibility scores based on their skills, CGPA, degree, and department.
-                        </p>
-                        <ul class="list-unstyled text-muted small">
-                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> PDF Resume validation & keyword indexing</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Real-time multi-stage application tracking</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Transparent match score & breakdown criteria</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="custom-card p-4 h-100">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-info text-white rounded-3 p-3 me-3">
-                                <i class="bi bi-building-check fs-4"></i>
-                            </div>
-                            <h4 class="fw-bold mb-0">For Recruiters</h4>
-                        </div>
-                        <p class="text-muted">
-                            Streamline your campus hiring pipeline. Filter hundreds of applicants in seconds by CGPA cutoffs, required technical skills, academic departments, and graduation years. Schedule interviews and manage feedback in one place.
-                        </p>
-                        <ul class="list-unstyled text-muted small">
-                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Automated candidate qualification filters</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> One-click interview scheduling & video meeting links</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i> Company branding and verified talent acquisition credentials</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="custom-card p-4 p-md-5 mb-5 bg-light border-0">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4 class="fw-bold mb-2">Ready to kickstart your professional journey?</h4>
-                        <p class="text-muted mb-0">Join thousands of students and top hiring partners on InternWorld today.</p>
-                    </div>
-                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                        <a href="{% url 'accounts:register_student' %}" class="btn btn-primary-custom px-4 py-2">Get Started</a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
+</section>
+
+<div class="container py-4">
+    <!-- What Makes InternWorld Different -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h6 class="text-primary text-uppercase fw-bold">Why Choose Us</h6>
+            <h2 class="fw-bold">What Makes InternWorld Different</h2>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="custom-card p-4 h-100">
+                    <div class="violet-tint-bg violet-tint-text icon-circle mx-auto">
+                        <i class="bi bi-robot fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Smart Matching</h5>
+                    <p class="text-muted small">AI-driven algorithms that match candidates with the right roles based on deep profile analysis.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="custom-card p-4 h-100">
+                    <div class="violet-tint-bg violet-tint-text icon-circle mx-auto">
+                        <i class="bi bi-shield-check fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Verified Partners</h5>
+                    <p class="text-muted small">Every company and recruiter is rigorously verified to ensure high-quality opportunities.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="custom-card p-4 h-100">
+                    <div class="violet-tint-bg violet-tint-text icon-circle mx-auto">
+                        <i class="bi bi-graph-up fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">End-to-End Tracking</h5>
+                    <p class="text-muted small">From application to interview, track every step seamlessly in one unified dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h6 class="text-primary text-uppercase fw-bold">Target Audience</h6>
+            <h2 class="fw-bold">Who It's For</h2>
+        </div>
+        <div class="row g-4">
+            <!-- Students -->
+            <div class="col-md-4">
+                <div class="custom-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary text-white rounded-3 p-3 me-3">
+                            <i class="bi bi-mortarboard-fill fs-4"></i>
+                        </div>
+                        <h4 class="fw-bold mb-0">Students</h4>
+                    </div>
+                    <p class="text-muted small mb-0">Gain access to verified internships and full-time placement opportunities from high-growth startups to Fortune 500 companies.</p>
+                </div>
+            </div>
+            <!-- Recruiters -->
+            <div class="col-md-4">
+                <div class="custom-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-info text-white rounded-3 p-3 me-3">
+                            <i class="bi bi-building-check fs-4"></i>
+                        </div>
+                        <h4 class="fw-bold mb-0">Recruiters</h4>
+                    </div>
+                    <p class="text-muted small mb-0">Streamline campus hiring. Filter applicants by skills and scores, schedule interviews, and manage feedback in one place.</p>
+                </div>
+            </div>
+            <!-- Administrators -->
+            <div class="col-md-4">
+                <div class="custom-card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success text-white rounded-3 p-3 me-3">
+                            <i class="bi bi-gear-fill fs-4"></i>
+                        </div>
+                        <h4 class="fw-bold mb-0">Administrators</h4>
+                    </div>
+                    <p class="text-muted small mb-0">Oversee the entire placement lifecycle with real-time analytics, student tracking, and partner management tools.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h6 class="text-primary text-uppercase fw-bold">Under the Hood</h6>
+            <h2 class="fw-bold">Our Technology Stack</h2>
+        </div>
+        <div class="custom-card p-4 bg-light border-0">
+            <div class="row g-3 text-center">
+                <div class="col-md-3 col-6">
+                    <h5 class="fw-bold text-dark">Django</h5>
+                    <p class="text-muted small mb-0">Robust Backend</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h5 class="fw-bold text-dark">Bootstrap 5</h5>
+                    <p class="text-muted small mb-0">Responsive UI</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h5 class="fw-bold text-dark">PostgreSQL</h5>
+                    <p class="text-muted small mb-0">Data Management</p>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h5 class="fw-bold text-dark">Chart.js</h5>
+                    <p class="text-muted small mb-0">Analytics Visualization</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team / Contact -->
+    <section class="mb-5">
+        <div class="custom-card p-4 p-md-5 bg-white text-center">
+            <h3 class="fw-bold mb-3">Get in Touch</h3>
+            <p class="text-muted mb-4">Have questions about our platform or want to partner with us?</p>
+            <a href="mailto:support@internworld.edu" class="btn btn-primary-custom px-4 py-2">
+                <i class="bi bi-envelope me-2"></i>Contact Our Team
+            </a>
+        </div>
+    </section>
 </div>
 {% endblock %}

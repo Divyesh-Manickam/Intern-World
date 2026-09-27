@@ -1,37 +1,12 @@
-# Virtual environment
 venv/
-env/
-.venv/
-
-# Python
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Django
-db.sqlite3
-*.log
-
-# Environment variables
+*.sqlite3
 .env
-
-# Media files
-media/resumes/*
-media/company_logos/*
-
-# IDE
+.env.*
+staticfiles/
+media/
+*.log
+.DS_Store
 .vscode/
 .idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Testing
-.coverage
-.pytest_cache/
-
-# Build files
-*.egg-info/
-dist/
-build/

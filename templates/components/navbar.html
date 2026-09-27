@@ -95,6 +95,13 @@
 
             <!-- Right Controls -->
             <ul class="navbar-nav ms-auto align-items-center">
+                <!-- Theme Toggle Button -->
+                <li class="nav-item me-2">
+                    <button class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-2" id="themeToggle" onclick="toggleTheme()" style="width: 38px; height: 38px; border: none; background: transparent;" aria-label="Toggle Theme">
+                        <i class="bi bi-sun-fill"></i>
+                    </button>
+                </li>
+                
                 {% if user.is_authenticated %}
                     <!-- Notifications Dropdown -->
                     <li class="nav-item dropdown me-3">

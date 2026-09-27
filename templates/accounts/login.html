@@ -37,6 +37,7 @@
                     <div class="mb-4">
                         <div class="d-flex justify-content-between">
                             <label class="form-label fw-semibold small">Password</label>
+                            <a href="{% url 'accounts:password_reset' %}" class="small text-decoration-none">Forgot your password?</a>
                         </div>
                         {{ form.password }}
                         {% if form.password.errors %}

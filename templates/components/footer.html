@@ -1,7 +1,7 @@
 <footer class="footer-custom mt-auto">
     <div class="container">
         <div class="row g-4 mb-4">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-6">
                 <div class="d-flex align-items-center mb-3">
                     <span class="badge bg-primary me-2 p-2 rounded-3">
                         <i class="bi bi-briefcase-fill text-white fs-5"></i>
@@ -17,37 +17,36 @@
                     <a href="#" class="text-muted fs-5"><i class="bi bi-twitter-x"></i></a>
                 </div>
             </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-white fw-bold mb-3">Quick Links</h6>
+                <ul class="list-unstyled small">
+                    <li class="mb-2"><a href="{% url 'opportunities:home' %}" class="footer-link">Home</a></li>
+                    <li class="mb-2"><a href="{% url 'opportunities:list' %}" class="footer-link">Opportunities</a></li>
+                    <li class="mb-2"><a href="{% url 'opportunities:about' %}" class="footer-link">About</a></li>
+                    <li class="mb-2"><a href="{% url 'accounts:login' %}" class="footer-link">Login</a></li>
+                    <li class="mb-2"><a href="{% url 'accounts:register_student' %}" class="footer-link">Register</a></li>
+                </ul>
+            </div>
             
-            <div class="col-lg-2 col-md-6 col-6">
+            <div class="col-lg-3 col-md-6">
                 <h6 class="text-white fw-bold mb-3">For Students</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="{% url 'opportunities:list' %}" class="footer-link">Browse Jobs</a></li>
-                    <li class="mb-2"><a href="{% url 'accounts:register_student' %}" class="footer-link">Create Profile</a></li>
-                    <li class="mb-2"><a href="{% url 'opportunities:list' %}?opportunity_type=INTERNSHIP" class="footer-link">Internships</a></li>
-                    <li class="mb-2"><a href="{% url 'opportunities:list' %}?opportunity_type=PLACEMENT" class="footer-link">Placements</a></li>
+                    <li class="mb-2"><a href="{% url 'students:dashboard' %}" class="footer-link">Dashboard</a></li>
+                    <li class="mb-2"><a href="{% url 'applications:my_applications' %}" class="footer-link">Applications</a></li>
+                    <li class="mb-2"><a href="{% url 'interviews:interview_list' %}" class="footer-link">Interviews</a></li>
+                    <li class="mb-2"><a href="{% url 'students:profile' %}" class="footer-link">Profile</a></li>
                 </ul>
             </div>
 
-            <div class="col-lg-2 col-md-6 col-6">
-                <h6 class="text-white fw-bold mb-3">For Employers</h6>
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-white fw-bold mb-3">For Recruiters</h6>
                 <ul class="list-unstyled small">
-                    <li class="mb-2"><a href="{% url 'accounts:register_recruiter' %}" class="footer-link">Post an Internship</a></li>
-                    <li class="mb-2"><a href="{% url 'accounts:register_recruiter' %}" class="footer-link">Campus Hiring</a></li>
-                    <li class="mb-2"><a href="{% url 'accounts:login' %}" class="footer-link">Recruiter Login</a></li>
+                    <li class="mb-2"><a href="{% url 'recruiters:dashboard' %}" class="footer-link">Dashboard</a></li>
+                    <li class="mb-2"><a href="{% url 'opportunities:create' %}" class="footer-link">Post Jobs</a></li>
+                    <li class="mb-2"><a href="{% url 'recruiters:applicants' %}" class="footer-link">Applicants</a></li>
+                    <li class="mb-2"><a href="{% url 'recruiters:company_profile' %}" class="footer-link">Company Profile</a></li>
                 </ul>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <h6 class="text-white fw-bold mb-3">Contact & Support</h6>
-                <p class="small text-muted mb-2">
-                    <i class="bi bi-geo-alt me-2 text-info"></i> Campus Placement Cell & Career Centre
-                </p>
-                <p class="small text-muted mb-2">
-                    <i class="bi bi-envelope me-2 text-info"></i> placements@internworld.edu
-                </p>
-                <p class="small text-muted">
-                    <i class="bi bi-shield-check me-2 text-info"></i> Production Ready Django Web Application
-                </p>
             </div>
         </div>
 

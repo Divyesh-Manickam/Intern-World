@@ -1,0 +1,78 @@
+<div class="custom-card h-100">
+    <div class="p-3 border-bottom d-none d-md-block">
+        <h6 class="fw-bold mb-0 text-muted text-uppercase small">Menu</h6>
+    </div>
+    <div class="list-group list-group-flush py-2">
+        {% if user.role == 'STUDENT' %}
+        <a href="{% url 'accounts:dashboard_redirect' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'dashboard' %}active text-white{% endif %}">
+            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        </a>
+        <a href="{% url 'students:edit_profile' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'edit_profile' %}active text-white{% endif %}">
+            <i class="bi bi-person me-2"></i>Profile
+        </a>
+        <a href="{% url 'opportunities:list' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'list' %}active text-white{% endif %}">
+            <i class="bi bi-briefcase me-2"></i>Opportunities
+        </a>
+        <a href="{% url 'students:saved_opportunities' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'saved_opportunities' %}active text-white{% endif %}">
+            <i class="bi bi-bookmark me-2"></i>Saved
+        </a>
+        <a href="{% url 'applications:my_applications' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'my_applications' %}active text-white{% endif %}">
+            <i class="bi bi-file-earmark-text me-2"></i>My Applications
+        </a>
+        <a href="{% url 'interviews:interview_list' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'interview_list' %}active text-white{% endif %}">
+            <i class="bi bi-calendar-check me-2"></i>Interviews
+        </a>
+        
+        {% elif user.role == 'RECRUITER' %}
+        <a href="{% url 'accounts:dashboard_redirect' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'dashboard' %}active text-white{% endif %}">
+            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        </a>
+        <a href="{% url 'recruiters:company_profile' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'company_profile' %}active text-white{% endif %}">
+            <i class="bi bi-building me-2"></i>Company Profile
+        </a>
+        <a href="{% url 'opportunities:my_opportunities' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'my_opportunities' %}active text-white{% endif %}">
+            <i class="bi bi-briefcase me-2"></i>My Opportunities
+        </a>
+        <a href="{% url 'recruiters:applicants' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'applicants' %}active text-white{% endif %}">
+            <i class="bi bi-people me-2"></i>Applicants
+        </a>
+        <a href="{% url 'interviews:interview_list' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'interview_list' %}active text-white{% endif %}">
+            <i class="bi bi-calendar-check me-2"></i>Interviews
+        </a>
+        
+        {% elif user.role == 'ADMIN' %}
+        <a href="{% url 'accounts:dashboard_redirect' %}" class="list-group-item list-group-item-action border-0 {% if request.resolver_match.url_name == 'dashboard' %}active text-white{% endif %}">
+            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        </a>
+        <a href="{% url 'analytics:admin_users' %}?role=STUDENT" class="list-group-item list-group-item-action border-0">
+            <i class="bi bi-mortarboard me-2"></i>Students
+        </a>
+        <a href="{% url 'analytics:admin_users' %}?role=RECRUITER" class="list-group-item list-group-item-action border-0">
+            <i class="bi bi-person-badge me-2"></i>Recruiters
+        </a>
+        <a href="{% url 'analytics:admin_companies' %}" class="list-group-item list-group-item-action border-0">
+            <i class="bi bi-building me-2"></i>Companies
+        </a>
+        <a href="{% url 'analytics:admin_opportunities' %}" class="list-group-item list-group-item-action border-0">
+            <i class="bi bi-briefcase me-2"></i>Opportunities
+        </a>
+        <a href="{% url 'analytics:admin_applications' %}" class="list-group-item list-group-item-action border-0">
+            <i class="bi bi-file-earmark-text me-2"></i>Applications
+        </a>
+        <a href="{% url 'analytics:analytics_view' %}" class="list-group-item list-group-item-action border-0">
+            <i class="bi bi-graph-up me-2"></i>Analytics
+        </a>
+        {% endif %}
+    </div>
+    
+    <style>
+        .list-group-item.active {
+            background-color: #8b5cf6 !important;
+            border-color: #8b5cf6 !important;
+        }
+        .list-group-item:hover:not(.active) {
+            background-color: #f5f3ff !important;
+            color: #8b5cf6 !important;
+        }
+    </style>
+</div>

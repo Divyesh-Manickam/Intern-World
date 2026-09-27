@@ -1,30 +1,50 @@
 /* ==========================================================================
-   InternWorld - Modern Theme & Corporate Styling
+   InternWorld - Modern Theme & Corporate Styling (Violet Gradient System)
    ========================================================================== */
 
 :root {
-  --primary-color: #0f4c81;
-  --primary-hover: #0b3860;
-  --primary-subtle: #e8f1f8;
-  --secondary-color: #4a5568;
-  --accent-color: #00a896;
-  --accent-hover: #028090;
-  --bg-main: #f8fafc;
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --primary-light: #ede9fe;
+  --primary-subtle: #f5f3ff;
+  --secondary: #8b5cf6;
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  --gradient-hero: linear-gradient(135deg, #4c1d95 0%, #5b21b6 30%, #7c3aed 60%, #6366f1 100%);
+  --bg-main: #f8f7ff;
   --bg-card: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
+  --text-main: #1e1b4b;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --accent: #06b6d4;
+}
+
+[data-theme='dark'] {
+  --primary: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --primary-light: #2e1065;
+  --primary-subtle: #1e1b4b;
+  --secondary: #a78bfa;
+  --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #818cf8 100%);
+  --gradient-hero: linear-gradient(135deg, #2e1065 0%, #4c1d95 30%, #5b21b6 60%, #7c3aed 100%);
+  --bg-main: #0f0b1a;
+  --bg-card: #1a1625;
+  --text-main: #e8e2f8;
+  --text-muted: #9ca3af;
+  --border-color: #2d2640;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-main);
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 main {
@@ -33,34 +53,39 @@ main {
 
 /* Navbar */
 .navbar-custom {
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-brand-text {
   font-weight: 700;
   letter-spacing: -0.5px;
-  color: var(--primary-color);
+  color: var(--primary);
+}
+
+.text-accent {
+  color: var(--accent) !important;
 }
 
 .nav-link {
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-muted);
   transition: color 0.15s ease-in-out;
 }
 
 .nav-link:hover, .nav-link.active {
-  color: var(--primary-color);
+  color: var(--primary);
 }
 
 /* Cards */
-.custom-card {
+.custom-card, .card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   box-shadow: var(--card-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .custom-card-hover:hover {
@@ -69,54 +94,66 @@ main {
 }
 
 .card-header-clean {
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
   padding: 1rem 1.25rem;
   font-weight: 600;
   border-top-left-radius: 12px !important;
   border-top-right-radius: 12px !important;
+  color: var(--text-main);
 }
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #0f4c81 0%, #1e3a8a 100%);
+  background: var(--gradient-hero);
   color: #ffffff;
   padding: 5rem 0 4.5rem;
+  transition: background 0.3s ease;
 }
 
 .hero-subtitle {
-  color: #cbd5e1;
+  color: rgba(255, 255, 255, 0.85);
   font-size: 1.2rem;
 }
 
 /* Buttons */
-.btn-primary-custom {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+.btn-primary-custom, .btn-primary {
+  background: var(--gradient-primary);
+  border: none;
   color: #ffffff;
   font-weight: 500;
   border-radius: 8px;
   padding: 0.5rem 1.25rem;
+  transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
-.btn-primary-custom:hover {
-  background-color: var(--primary-hover);
-  border-color: var(--primary-hover);
+.btn-primary-custom:hover, .btn-primary:hover {
+  opacity: 0.9;
   color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .btn-accent {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+  background-color: var(--accent);
+  border-color: var(--accent);
   color: #ffffff;
   font-weight: 500;
   border-radius: 8px;
 }
 
 .btn-accent:hover {
-  background-color: var(--accent-hover);
-  border-color: var(--accent-hover);
+  background-color: #0891b2;
+  border-color: #0891b2;
   color: #ffffff;
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  color: #fff;
 }
 
 /* Match Score Badge */
@@ -131,53 +168,57 @@ main {
 }
 
 .match-high {
-  background-color: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .match-mid {
-  background-color: #eff6ff;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .match-low {
-  background-color: #f8fafc;
-  color: #475569;
-  border: 1px solid #e2e8f0;
+  background-color: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 /* Skill Tags */
 .skill-tag {
   display: inline-block;
-  background-color: #f1f5f9;
-  color: #334155;
+  background-color: var(--primary-light);
+  color: var(--primary);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.25rem 0.55rem;
   border-radius: 6px;
   margin-right: 4px;
   margin-bottom: 4px;
+  border: 1px solid var(--border-color);
 }
 
 /* Badges */
 .badge-purple {
-  background-color: #f3e8ff;
-  color: #6b21a8;
-  border: 1px solid #d8b4fe;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+.bg-primary {
+  background-color: var(--primary) !important;
 }
 
 /* Footer */
 .footer-custom {
-  background-color: #0f172a;
-  color: #94a3b8;
-  border-top: 1px solid #1e293b;
+  background-color: #090710;
+  color: #9ca3af;
+  border-top: 1px solid var(--border-color);
   padding: 3.5rem 0 1.5rem;
 }
 
 .footer-link {
-  color: #cbd5e1;
+  color: #d1d5db;
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -187,15 +228,18 @@ main {
 }
 
 /* Table Styling */
+.table {
+  color: var(--text-main);
+}
 .table-custom {
   border-collapse: separate;
   border-spacing: 0;
 }
 
 .table-custom th {
-  background-color: #f8fafc;
+  background-color: var(--bg-card);
   font-weight: 600;
-  color: #475569;
+  color: var(--text-muted);
   border-bottom: 1px solid var(--border-color);
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -205,4 +249,28 @@ main {
 .table-custom td {
   vertical-align: middle;
   border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+/* Forms */
+.form-control, .form-select {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--border-color);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+}
+.form-control:focus, .form-select:focus {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.25);
+}
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+.input-group-text {
+  background-color: var(--primary-subtle);
+  border-color: var(--border-color);
+  color: var(--text-muted);
 }
